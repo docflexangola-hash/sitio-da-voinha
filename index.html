@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Sítio da Voinha — Restaurante &amp; Playground · Praia Morena, Benguela</title>
+    <meta
+      name="description"
+      content="Bem-vindo ao Sítio da Voinha, na Praia Morena, Benguela. Consulte o nosso menu e os preços em Kwanza. Aberto Terça a Domingo."
+    />
+    <meta property="og:title" content="Sítio da Voinha — Restaurante & Playground" />
+    <meta
+      property="og:description"
+      content="Menu e preços do Sítio da Voinha, à beira-mar na Praia Morena, Benguela."
+    />
+    <meta property="og:image" content="%BASE_URL%images/hero-1600.jpg" />
+    <meta property="og:url" content="https://docflexangola-hash.github.io/sitio-da-voinha/" />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121312" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,500&display=swap"
+    />
+    <link rel="preload" as="image" href="%BASE_URL%images/hero-900.jpg" media="(max-width: 767px)" fetchpriority="high" />
+  </head>
+  <body>
+    <a
+      href="#menu"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary"
+      >Ir para o menu</a
+    >
+
+    <!-- ============ HEADER ============ -->
+    <header class="fixed inset-x-0 top-0 z-50 border-b border-outline-variant/40 bg-surface/85 backdrop-blur-md" data-header>
+      <div class="mx-auto flex h-16 max-w-page items-center justify-between gap-4 px-4 sm:px-6 md:h-20 md:px-8">
+        <a href="#inicio" class="group flex min-w-0 items-center gap-3" aria-label="Sítio da Voinha, início">
+          <img
+            src="%BASE_URL%images/logotipo_sitio_da_voinha.svg"
+            alt="Logótipo Sítio da Voinha"
+            class="logo-sdv h-9 w-auto transition-transform duration-300 group-hover:scale-[1.03] md:h-11"
+          />
+        </a>
+
+        <nav class="hidden items-center gap-7 lg:flex" aria-label="Navegação principal">
+          <a href="#menu" class="font-sans text-label-caps uppercase text-on-surface-variant transition-colors hover:text-primary" data-i18n="nav_menu">Menu</a>
+        </nav>
+
+        <div class="flex items-center gap-2">
+          <div class="flex items-center rounded-none border border-outline-variant/50 bg-surface-lowest p-0.5" role="group" aria-label="Idioma">
+            <button type="button" data-lang-btn="pt" class="rounded-none px-2.5 py-1 font-sans text-label-caps-sm uppercase text-on-surface-variant transition-colors hover:text-on-surface">PT</button>
+            <button type="button" data-lang-btn="en" class="rounded-none px-2.5 py-1 font-sans text-label-caps-sm uppercase text-on-surface-variant transition-colors hover:text-on-surface">EN</button>
+          </div>
+          <button
+            type="button"
+            data-theme-toggle
+            class="flex h-9 w-9 items-center justify-center rounded-none border border-outline-variant/50 bg-surface-lowest text-on-surface transition-colors hover:text-primary"
+            aria-label="Modo escuro"
+          >
+            <span data-theme-moon><span data-icon="moon" class="inline-block text-[1.05rem]"></span></span>
+            <span data-theme-sun class="hidden"><span data-icon="sun" class="inline-block text-[1.05rem]"></span></span>
+          </button>
+          <a href="tel:+244925963030" class="btn-primary !rounded-none !px-4 !py-2 !text-label-caps-sm max-md:hidden" data-i18n="cta_call"
+            ><span data-icon="call" class="inline-block text-[1rem]"></span>Ligar</a
+          >
+          <button
+            type="button"
+            class="flex h-9 w-9 items-center justify-center rounded-none border border-outline-variant/50 bg-surface-lowest text-on-surface lg:hidden"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+            aria-label="Abrir menu"
+            data-nav-open
+          >
+            <span data-icon="menu" class="text-[1.2rem]"></span>
+          </button>
+        </div>
+      </div>
+
+      <div id="mobile-nav" class="hidden border-t border-outline-variant/40 bg-surface/95 backdrop-blur-xl lg:hidden" data-mobile-nav>
+        <nav class="mx-auto flex max-w-page flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Navegação móvel">
+          <a href="#menu" class="rounded-lg px-3 py-3 font-sans text-headline-sm uppercase tracking-wider text-on-surface hover:bg-surface-high" data-i18n="nav_menu">Menu</a>
+          <a href="tel:+244925963030" class="btn-primary mt-2" data-i18n="cta_call_full"><span data-icon="call" class="text-[1.1rem]"></span>Ligar +244 925 963 030</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="inicio">
+      <!-- ============ BEM-VINDO ============ -->
+      <section class="relative isolate overflow-hidden pt-16 md:pt-20">
+        <div class="absolute inset-0 -z-10">
+          <picture>
+            <source media="(min-width: 768px)" srcset="%BASE_URL%images/hero-1600.jpg" />
+            <img
+              src="%BASE_URL%images/hero-900.jpg"
+              alt="Esplanada costeira do Sítio da Voinha com guarda-sóis de palha na Praia Morena, Benguela"
+              class="h-full w-full object-cover"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </picture>
+          <div class="absolute inset-0 bg-gradient-to-b from-ink/80 via-ink/40 to-surface" aria-hidden="true"></div>
+        </div>
+
+        <div class="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-6 py-16 text-center text-white sm:py-20">
+          <span class="font-sans text-[0.85rem] font-semibold uppercase tracking-[0.42em] opacity-90 sm:text-[0.95rem]" data-i18n="hero_eyebrow"
+            >Bem-vindo ao</span
+          >
+          <h1 class="mt-2">
+            <img
+              src="%BASE_URL%images/wordmark_sitio_da_voinha.svg"
+              alt="Sítio da Voinha"
+              class="logo-sdv-hero mx-auto w-[clamp(11rem,40vw,22rem)] max-w-full"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </h1>
+          <p class="mt-5 max-w-xl text-balance font-sans text-body-lg text-white/85" data-i18n="hero_mini">
+            Sabor de casa à beira-mar na Praia Morena, em Benguela. Explore o nosso menu e os preços abaixo.
+          </p>
+          <a href="#menu" class="btn-primary mt-8 !py-4 font-sans !text-body-md" data-i18n="cta_menu"
+            ><span data-icon="utensils" class="text-[1.2rem]"></span>Ver Menu</a
+          >
+        </div>
+      </section>
+
+      <!-- ============ MENU ============ -->
+      <section id="menu" class="section mx-auto max-w-page px-4 pb-16 pt-10 sm:px-6 md:px-8">
+        <div class="mb-8 text-center">
+          <p class="font-script text-script-accent italic text-tertiary" data-i18n="menu_sub">A nossa ementa</p>
+          <h2 class="mt-1 font-sans text-headline-lg uppercase text-on-surface" data-i18n="sec_menu">Menu</h2>
+          <span class="mx-auto mt-4 block h-px w-24 bg-gold-500/60"></span>
+        </div>
+
+        <!-- Barra de abas (uma por categoria) -->
+        <div class="sticky top-16 z-40 -mx-4 border-b border-outline-variant/40 bg-surface/90 px-4 py-3 backdrop-blur-md md:top-20 md:-mx-8 md:px-8" data-menu-chrome>
+          <div class="mx-auto max-w-3xl">
+            <div id="tabs" class="no-scrollbar flex items-center gap-2 overflow-x-auto pb-0.5" role="tablist" aria-label="Categorias do menu" data-tabs></div>
+          </div>
+        </div>
+
+        <!-- Lista da categoria ativa -->
+        <div id="lista-categoria" class="mx-auto mt-8 max-w-3xl" data-lista></div>
+      </section>
+    </main>
+
+    <!-- ============ RODAPÉ ============ -->
+    <footer class="border-t border-outline-variant/40 bg-surface-low pb-safe">
+      <div class="mx-auto flex max-w-page flex-col items-center gap-6 px-4 py-12 text-center sm:px-6">
+        <img src="%BASE_URL%images/logotipo_sitio_da_voinha.svg" alt="Sítio da Voinha" class="logo-sdv h-14 w-auto opacity-90" loading="lazy" />
+
+        <div class="grid w-full max-w-3xl gap-6 text-left sm:grid-cols-3">
+          <div>
+            <h3 class="font-sans text-headline-sm uppercase text-on-surface" data-i18n="loc_addr_label">Endereço</h3>
+            <p class="mt-1 font-sans text-body-sm text-on-surface-variant" data-i18n="loc_addr">Avenida dos Restaurantes, Praia Morena, Benguela — Angola</p>
+          </div>
+          <div>
+            <h3 class="font-sans text-headline-sm uppercase text-on-surface" data-i18n="loc_hours_label">Horário</h3>
+            <p class="mt-1 font-sans text-body-sm text-on-surface-variant" data-i18n="loc_hours">Terça a Domingo · 10h00 – 22h00</p>
+            <p class="mt-0.5 font-sans text-body-sm text-outline" data-i18n="loc_closed">Segunda-feira: encerrado</p>
+          </div>
+          <div>
+            <h3 class="font-sans text-headline-sm uppercase text-on-surface" data-i18n="loc_phone_label">Contacto</h3>
+            <p class="mt-1 font-sans text-body-sm"><a href="tel:+244925963030" class="font-semibold text-primary hover:underline">+244 925 963 030</a></p>
+            <a href="https://wa.me/244925963030" class="mt-1 inline-flex items-center gap-1.5 font-sans text-body-sm font-semibold text-primary hover:underline">
+              <span data-icon="chat" class="text-[1rem] text-green-600"></span>WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <p class="font-sans text-body-sm text-on-surface-variant" data-i18n="foot_rights">© 2026 Sítio da Voinha. Todos os direitos reservados.</p>
+        <a href="%BASE_URL%admin.html" class="inline-flex items-center gap-1.5 font-sans text-label-caps-sm uppercase text-outline transition-colors hover:text-primary"><span data-icon="lock" class="text-[0.9rem]"></span><span data-i18n="foot_admin">Área reservada</span></a>
+        <p class="font-sans text-body-sm text-outline">
+          <span data-i18n="foot_cred">Desenvolvido por</span>&nbsp;
+          <a
+            href="https://docflex-site.vercel.app/"
+            target="_blank"
+            rel="noopener"
+            class="font-bold uppercase text-on-surface-variant transition-colors hover:text-primary"
+            >DOCFLEX ANGOLA</a
+          >
+        </p>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

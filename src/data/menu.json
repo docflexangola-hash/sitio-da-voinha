@@ -1,0 +1,390 @@
+{
+  "moeda": "Kz",
+  "menus": [
+    {
+      "id": "refeicoes",
+      "titulo": "Refeições",
+      "categorias": [
+        {
+          "id": "pequeno-almoco",
+          "nome": "Pequeno Almoço da Avó",
+          "nome_en": "Granny's Breakfast",
+          "itens": [
+            { "nome": "Omelete Mista", "nome_en": "Mixed Omelette", "preco": 3500, "nota": null },
+            { "nome": "Omelete Primavera", "nome_en": "Spring Vegetable Omelette", "preco": 4000, "nota": null },
+            { "nome": "Tosta Mista", "nome_en": "Ham & Cheese Toastie", "preco": 3000, "nota": null },
+            { "nome": "Tosta de Frango / Atum", "nome_en": "Chicken or Tuna Toastie", "preco": 4000, "nota": null },
+            { "nome": "Pequeno Almoço à Inglesa", "nome_en": "Full English Breakfast", "preco": 4500, "nota": null }
+          ]
+        },
+        {
+          "id": "entradas",
+          "nome": "Entradas da Avó",
+          "nome_en": "Granny's Starters",
+          "itens": [
+            { "nome": "Azeitonas Temperadas", "nome_en": "Marinated Olives", "preco": 1000, "nota": null },
+            { "nome": "Cesto de Pão", "nome_en": "Bread Basket", "preco": 500, "nota": null },
+            { "nome": "Cesto de Pão Torrado", "nome_en": "Toasted Bread Basket", "preco": 800, "nota": null },
+            { "nome": "Pão ao Alho", "nome_en": "Garlic Bread", "preco": 1000, "nota": null },
+            { "nome": "Couvert à Moda da Avó", "nome_en": "Granny's House Appetizer Platter", "preco": 3000, "nota": null },
+            { "nome": "Sopa de Feijão / Legumes", "nome_en": "Bean & Vegetable Soup", "preco": 3000, "nota": null },
+            { "nome": "Salgados da Avó", "nome_en": "Granny's Savoury Pastries", "preco": 6000, "nota": null }
+          ]
+        },
+        {
+          "id": "snacks",
+          "nome": "Snacks",
+          "nome_en": "Snacks",
+          "itens": [
+            { "nome": "Hamburguer da Avó", "nome_en": "Granny's Burger", "preco": 4000, "nota": null },
+            { "nome": "Cachorro Quente", "nome_en": "Hot Dog", "preco": 2500, "nota": null },
+            { "nome": "Prego no Pão", "nome_en": "Steak Sandwich (Prego)", "preco": 4000, "nota": null },
+            { "nome": "Prego no Prato", "nome_en": "Prego Steak Plate", "preco": 5000, "nota": null }
+          ]
+        },
+        {
+          "id": "petiscos",
+          "nome": "Petiscos da Avó",
+          "nome_en": "Granny's Small Bites",
+          "itens": [
+            { "nome": "Amêijoas à Bulhão Pato", "nome_en": "Bulhão Pato Clams", "preco": 5000, "nota": null },
+            { "nome": "Camarão ao Natural", "nome_en": "Plain Boiled Prawns", "preco": 8000, "nota": null },
+            { "nome": "Camarão ao Alho", "nome_en": "Garlic Prawns", "preco": 9000, "nota": null },
+            { "nome": "Chouriço Caseiro", "nome_en": "House-cured Chouriço", "preco": 6000, "nota": null },
+            { "nome": "Choco Panado Frito", "nome_en": "Fried Breaded Cuttlefish", "preco": 6000, "nota": null },
+            { "nome": "Frango à Passarinho", "nome_en": "Passarinho-Style Fried Chicken", "preco": 5500, "nota": null },
+            { "nome": "Gambas ao Alho", "nome_en": "Garlic Gambas", "preco": 13000, "nota": null },
+            { "nome": "Ostras", "nome_en": "Oysters", "preco": 5000, "nota": null },
+            { "nome": "Panadinhos de Frango / Choco", "nome_en": "Fried Chicken or Cuttlefish Goujons", "preco": 12000, "nota": null },
+            { "nome": "Pica-pau", "nome_en": "Diced Beef Bites (Pica-pau)", "preco": 6500, "nota": null }
+          ]
+        },
+        {
+          "id": "massas",
+          "nome": "Massas da Avó",
+          "nome_en": "Granny's Pasta",
+          "itens": [
+            { "nome": "Esparguete à Carbonara", "nome_en": "Spaghetti Carbonara", "preco": 10000, "nota": null },
+            { "nome": "Esparguete Mar e Monte", "nome_en": "Sea & Land Spaghetti", "preco": 13000, "nota": null },
+            { "nome": "Fusilli de Camarão", "nome_en": "Prawn Fusilli", "preco": 13000, "nota": null }
+          ]
+        },
+        {
+          "id": "carnes",
+          "nome": "Carnes",
+          "nome_en": "Meats",
+          "itens": [
+            { "nome": "Baby Chicken", "nome_en": "Baby Chicken", "preco": 7000, "nota": null },
+            { "nome": "Bife da Casa", "nome_en": "House Steak", "preco": 12000, "nota": null },
+            { "nome": "Bife do Sítio", "nome_en": "The Sítio Steak", "preco": 13000, "nota": null },
+            { "nome": "Bife Suculento", "nome_en": "Juicy Steak", "preco": 13500, "nota": null },
+            { "nome": "Bife à Portuguesa", "nome_en": "Portuguese-Style Steak", "preco": 12000, "nota": null },
+            { "nome": "Bife Terra e Mar", "nome_en": "Surf & Turf Steak", "preco": 14000, "nota": null },
+            { "nome": "Bitoque da Avó", "nome_en": "Granny's Bitoque Steak", "preco": 7000, "nota": null },
+            { "nome": "Grelhada Económica", "nome_en": "Budget Mixed Grill", "preco": 17500, "nota": "1 pessoa", "nota_en": "For one" },
+            { "nome": "Grelhada Mista", "nome_en": "Mixed Grill for Two", "preco": 35000, "nota": "2 pessoas (servida em barco)", "nota_en": "For two, served on a wooden boat" },
+            { "nome": "Grelhada Familiar", "nome_en": "Family Mixed Grill", "preco": 40000, "nota": null },
+            { "nome": "Picanha", "nome_en": "Picanha", "preco": 14000, "nota": null },
+            { "nome": "Tiras de Vaca", "nome_en": "Beef Strips", "preco": 10000, "nota": null },
+            { "nome": "Tiras de Porco", "nome_en": "Pork Strips", "preco": 11000, "nota": null },
+            { "nome": "Tomahawk", "nome_en": "Tomahawk", "preco": 18000, "nota": null }
+          ]
+        },
+        {
+          "id": "peixe-marisco",
+          "nome": "Peixe / Marisco",
+          "nome_en": "Fish & Seafood",
+          "itens": [
+            { "nome": "Choco Grelhado", "nome_en": "Grilled Cuttlefish", "preco": 12000, "nota": "Com batatas cozidas e legumes salteados", "nota_en": "Served with boiled potatoes & sautéed vegetables" },
+            { "nome": "Gambas ao Alho", "nome_en": "Garlic Gambas", "preco": 16000, "nota": "Batata frita e salada", "nota_en": "Served with chips & salad" },
+            { "nome": "Posta de Garoupa", "nome_en": "Grouper Steak", "preco": 15000, "nota": null },
+            { "nome": "Posta de Corvina Delmar", "nome_en": "Delmar Corvina Steak", "preco": 12000, "nota": null },
+            { "nome": "Posta de Garoupa ao Molho de Camarão", "nome_en": "Grouper Steak in Prawn Sauce", "preco": 18000, "nota": null },
+            { "nome": "Posta de Garoupa XXL", "nome_en": "XXL Grouper Steak", "preco": 20000, "nota": null },
+            { "nome": "Lagosta Grelhada ao Molho Manteiga", "nome_en": "Grilled Lobster in Butter Sauce", "preco": 20000, "nota": null },
+            { "nome": "Lagosta Gratinada", "nome_en": "Gratinéed Lobster", "preco": 22500, "nota": null },
+            { "nome": "Tábua Terra e Mar", "nome_en": "Surf & Turf Platter", "preco": 100000, "nota": null }
+          ]
+        },
+        {
+          "id": "batidos",
+          "nome": "Batidos da Avó",
+          "nome_en": "Granny's Smoothies",
+          "itens": [
+            { "nome": "Batido de Banana", "nome_en": "Banana Smoothie", "preco": 3000, "nota": null },
+            { "nome": "Batido Energético", "nome_en": "Energy Smoothie", "preco": 4000, "nota": null },
+            { "nome": "Batido de Morango", "nome_en": "Strawberry Smoothie", "preco": 3500, "nota": null },
+            { "nome": "Batido da Avó", "nome_en": "Granny's Smoothie", "preco": 4000, "nota": null }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bebidas",
+      "titulo": "Bebidas",
+      "categorias": [
+        {
+          "id": "cafetaria",
+          "nome": "Cafetaria",
+          "nome_en": "Coffee Bar",
+          "itens": [
+            { "nome": "Abatanado", "nome_en": "Long Black Coffee (Abatanado)", "preco": 1000, "nota": null },
+            { "nome": "Café Expresso", "nome_en": "Espresso", "preco": 1000, "nota": null },
+            { "nome": "Copo de Leite", "nome_en": "Glass of Milk", "preco": 1000, "nota": null },
+            { "nome": "Galão", "nome_en": "Galão (Portuguese Latte)", "preco": 2000, "nota": null }
+          ]
+        },
+        {
+          "id": "aguas",
+          "nome": "Águas",
+          "nome_en": "Waters",
+          "itens": [
+            { "nome": "Água 0,5 L", "nome_en": "Water 0.5 L", "preco": 500, "nota": null },
+            { "nome": "Água 1,5 L", "nome_en": "Water 1.5 L", "preco": 1000, "nota": null },
+            { "nome": "Água Tónica", "nome_en": "Tonic Water", "preco": 1000, "nota": null },
+            { "nome": "Água com Gás", "nome_en": "Sparkling Water", "preco": 2500, "nota": null }
+          ]
+        },
+        {
+          "id": "sumos",
+          "nome": "Sumos",
+          "nome_en": "Juices",
+          "itens": [
+            { "nome": "Compal (Garrafa)", "nome_en": "Compal (Bottle)", "preco": 600, "nota": null },
+            { "nome": "Compal (Lata)", "nome_en": "Compal (Can)", "preco": 1000, "nota": null },
+            { "nome": "Nutry (Lata)", "nome_en": "Nutry (Can)", "preco": 1000, "nota": null },
+            { "nome": "Nutry 1 L", "nome_en": "Nutry 1 L", "preco": 2500, "nota": null }
+          ]
+        },
+        {
+          "id": "sumos-naturais",
+          "nome": "Sumos Naturais",
+          "nome_en": "Fresh Juices",
+          "itens": [
+            { "nome": "Ananás", "nome_en": "Pineapple", "preco": 3000, "nota": null },
+            { "nome": "Ananás com Hortelã", "nome_en": "Pineapple & Mint", "preco": 4000, "nota": null },
+            { "nome": "Ananás e Beterraba", "nome_en": "Pineapple & Beetroot", "preco": 4000, "nota": null },
+            { "nome": "Maracujá", "nome_en": "Passion Fruit", "preco": 4500, "nota": null },
+            { "nome": "Melância", "nome_en": "Watermelon", "preco": 3000, "nota": null },
+            { "nome": "Mix de Frutas", "nome_en": "Mixed Fruit", "preco": 5000, "nota": null },
+            { "nome": "Sumo de Limão", "nome_en": "Fresh Lemon Juice", "preco": 3000, "nota": null }
+          ]
+        },
+        {
+          "id": "refrigerantes",
+          "nome": "Refrigerantes",
+          "nome_en": "Soft Drinks",
+          "itens": [
+            { "nome": "Coca-Cola, Sprite, Fanta (Garrafa)", "nome_en": "Coca-Cola, Sprite, Fanta (Bottle)", "preco": 500, "nota": null },
+            { "nome": "Coca-Cola, Sprite, Fanta, Sumol (Lata)", "nome_en": "Coca-Cola, Sprite, Fanta, Sumol (Can)", "preco": 1000, "nota": null }
+          ]
+        },
+        {
+          "id": "cervejas",
+          "nome": "Cervejas",
+          "nome_en": "Beers",
+          "itens": [
+            { "nome": "Booster (Garrafa)", "nome_en": "Booster (Bottle)", "preco": 800, "nota": null },
+            { "nome": "Booster (Lata)", "nome_en": "Booster (Can)", "preco": 1500, "nota": null },
+            { "nome": "Cuca (Garrafa)", "nome_en": "Cuca (Bottle)", "preco": 700, "nota": null },
+            { "nome": "Eka", "nome_en": "Eka", "preco": 700, "nota": null },
+            { "nome": "Smirnoff (Lata)", "nome_en": "Smirnoff (Can)", "preco": 2000, "nota": null },
+            { "nome": "Savanna", "nome_en": "Savanna", "preco": 2500, "nota": null },
+            { "nome": "Heineken", "nome_en": "Heineken", "preco": 2500, "nota": null },
+            { "nome": "Corona", "nome_en": "Corona", "preco": 2000, "nota": null }
+          ]
+        },
+        {
+          "id": "finos",
+          "nome": "Finos (Pressão)",
+          "nome_en": "Draft Beer",
+          "itens": [
+            { "nome": "Canecão", "nome_en": "Big Mug of Draft", "preco": 1500, "nota": null },
+            { "nome": "Fino", "nome_en": "Draft Beer (Fino)", "preco": 700, "nota": null },
+            { "nome": "Lambreta", "nome_en": "Lambreta (Small Draft)", "preco": 500, "nota": null },
+            { "nome": "Lambreta Tango", "nome_en": "Lambreta Tango (Small Draft)", "preco": 700, "nota": null },
+            { "nome": "Panaché", "nome_en": "Panaché (Shandy)", "preco": 1000, "nota": null },
+            { "nome": "Tango", "nome_en": "Tango (Draft)", "preco": 1000, "nota": null }
+          ]
+        },
+        {
+          "id": "energeticos",
+          "nome": "Energéticos",
+          "nome_en": "Energy Drinks",
+          "itens": [
+            { "nome": "Speed", "nome_en": "Speed", "preco": 1500, "nota": null },
+            { "nome": "Red Bull", "nome_en": "Red Bull", "preco": 3500, "nota": null },
+            { "nome": "Ginger Ale", "nome_en": "Ginger Ale", "preco": 2000, "nota": null }
+          ]
+        },
+        {
+          "id": "cocktails-sem-alcool",
+          "nome": "Cocktails sem Álcool",
+          "nome_en": "Non-Alcoholic Cocktails",
+          "itens": [
+            { "nome": "Do Beijo", "nome_en": "Do Beijo", "preco": 4000, "nota": null },
+            { "nome": "Lagoa Azul", "nome_en": "Blue Lagoon", "preco": 4000, "nota": null },
+            { "nome": "Mojito", "nome_en": "Mojito", "preco": 4000, "nota": null },
+            { "nome": "Pink Limonada", "nome_en": "Pink Lemonade", "preco": 4000, "nota": null },
+            { "nome": "Pina Colada", "nome_en": "Pina Colada", "preco": 4000, "nota": null },
+            { "nome": "Sex on the Beach", "nome_en": "Sex on the Beach", "preco": 4000, "nota": null }
+          ]
+        },
+        {
+          "id": "cocktails-com-alcool",
+          "nome": "Cocktails com Álcool",
+          "nome_en": "Alcoholic Cocktails",
+          "itens": [
+            { "nome": "Cuba Libre", "nome_en": "Cuba Libre", "preco": 5000, "nota": null },
+            { "nome": "Cana", "nome_en": "Cana (Cane Rum)", "preco": 5000, "nota": null },
+            { "nome": "Daiquiri", "nome_en": "Daiquiri", "preco": 5000, "nota": null },
+            { "nome": "Do Beijo", "nome_en": "Do Beijo", "preco": 5000, "nota": null },
+            { "nome": "Lagoa Azul", "nome_en": "Blue Lagoon", "preco": 5000, "nota": null },
+            { "nome": "Margarita", "nome_en": "Margarita", "preco": 5000, "nota": null },
+            { "nome": "Mojito", "nome_en": "Mojito", "preco": 5000, "nota": null },
+            { "nome": "Pina Colada", "nome_en": "Pina Colada", "preco": 5000, "nota": null },
+            { "nome": "Pink Limonada", "nome_en": "Pink Lemonade", "preco": 5000, "nota": null },
+            { "nome": "Sex on the Beach", "nome_en": "Sex on the Beach", "preco": 5000, "nota": null }
+          ]
+        },
+        {
+          "id": "caipirinhas",
+          "nome": "Caipirinhas",
+          "nome_en": "Caipirinhas",
+          "itens": [
+            { "nome": "Ananás", "nome_en": "Pineapple Caipirinha", "preco": 3500, "nota": null },
+            { "nome": "Caipi Black", "nome_en": "Caipi Black", "preco": 4000, "nota": null },
+            { "nome": "Caipirinha da Avó", "nome_en": "Granny's Caipirinha", "preco": 3500, "nota": null },
+            { "nome": "Frutos Vermelhos", "nome_en": "Red Berry Caipirinha", "preco": 5500, "nota": null },
+            { "nome": "Limão", "nome_en": "Lime Caipirinha", "preco": 3500, "nota": null },
+            { "nome": "Maracujá", "nome_en": "Passion Fruit Caipirinha", "preco": 5000, "nota": null }
+          ]
+        },
+        {
+          "id": "shots",
+          "nome": "Shots",
+          "nome_en": "Shots",
+          "itens": [
+            { "nome": "B52", "nome_en": "B52", "preco": 1500, "nota": null },
+            { "nome": "Mata Mamã", "nome_en": "Mata Mamã", "preco": 1500, "nota": null },
+            { "nome": "Pontapé na Rata", "nome_en": "Pontapé na Rata", "preco": 1500, "nota": null },
+            { "nome": "Tequila", "nome_en": "Tequila", "preco": 1500, "nota": null },
+            { "nome": "Hemorragia Cerebral", "nome_en": "Brain Hemorrhage", "preco": 2000, "nota": null }
+          ]
+        },
+        {
+          "id": "gins",
+          "nome": "Gins",
+          "nome_en": "Gins",
+          "itens": [
+            { "nome": "Beefeater", "nome_en": "Beefeater", "preco": 4500, "nota": null },
+            { "nome": "Bombay", "nome_en": "Bombay", "preco": 5500, "nota": null },
+            { "nome": "Bulldog", "nome_en": "Bulldog", "preco": 6500, "nota": null },
+            { "nome": "Frutos Vermelhos", "nome_en": "Red Berry Gin", "preco": 5500, "nota": null },
+            { "nome": "Gordon's (Lata)", "nome_en": "Gordon's (Can)", "preco": 2000, "nota": null },
+            { "nome": "Gordon's (Dose)", "nome_en": "Gordon's (Shot)", "preco": 4000, "nota": null },
+            { "nome": "Malucão", "nome_en": "Malucão", "preco": 5000, "nota": null }
+          ]
+        },
+        {
+          "id": "aguardentes-conhaque",
+          "nome": "Aguardentes / Conhaque",
+          "nome_en": "Spirits / Brandy",
+          "itens": [
+            { "nome": "Antiqua", "nome_en": "Antiqua", "preco": 5500, "nota": null },
+            { "nome": "Aliança Velha", "nome_en": "Aliança Velha", "preco": 5500, "nota": null },
+            { "nome": "Martell (Cognac)", "nome_en": "Martell (Cognac)", "preco": 8000, "nota": null }
+          ]
+        },
+        {
+          "id": "licores",
+          "nome": "Licores",
+          "nome_en": "Liqueurs",
+          "itens": [
+            { "nome": "Amarula", "nome_en": "Amarula", "preco": 4000, "nota": null },
+            { "nome": "Beirão", "nome_en": "Beirão", "preco": 4000, "nota": null },
+            { "nome": "Malibu", "nome_en": "Malibu", "preco": 4000, "nota": null },
+            { "nome": "Tia Maria", "nome_en": "Tia Maria", "preco": 4000, "nota": null }
+          ]
+        },
+        {
+          "id": "whisky-velho",
+          "nome": "Whisky Velho (Dose)",
+          "nome_en": "Aged Whisky (Shot)",
+          "itens": [
+            { "nome": "Antiquary 15 Anos", "nome_en": "Antiquary 15 Years", "preco": 6500, "nota": null },
+            { "nome": "Black Label", "nome_en": "Black Label", "preco": 6000, "nota": null },
+            { "nome": "Chivas Regal 12 Anos", "nome_en": "Chivas Regal 12 Years", "preco": 6000, "nota": null },
+            { "nome": "Double Black Label", "nome_en": "Double Black Label", "preco": 7000, "nota": null }
+          ]
+        },
+        {
+          "id": "whisky-novo",
+          "nome": "Whisky Novo (Dose)",
+          "nome_en": "Blended Whisky (Shot)",
+          "itens": [
+            { "nome": "Famous Grouse", "nome_en": "Famous Grouse", "preco": 4000, "nota": null },
+            { "nome": "Jameson", "nome_en": "Jameson", "preco": 4000, "nota": null },
+            { "nome": "Red Label", "nome_en": "Red Label", "preco": 3000, "nota": null }
+          ]
+        },
+        {
+          "id": "vermutes",
+          "nome": "Vermutes",
+          "nome_en": "Vermouths",
+          "itens": [
+            { "nome": "Martini Bianco", "nome_en": "Martini Bianco", "preco": 3500, "nota": null },
+            { "nome": "Martini Rosso", "nome_en": "Martini Rosso", "preco": 4000, "nota": null }
+          ]
+        },
+        {
+          "id": "sangrias",
+          "nome": "Sangrias",
+          "nome_en": "Sangria",
+          "itens": [
+            { "nome": "Espumante", "nome_en": "Sparkling Sangria", "preco": 22000, "nota": null },
+            { "nome": "Frutos Vermelhos", "nome_en": "Red Berry Sangria", "preco": 24000, "nota": null },
+            { "nome": "Branca", "nome_en": "White Sangria", "preco": 12000, "nota": null },
+            { "nome": "Tinta", "nome_en": "Red Sangria", "preco": 13000, "nota": null },
+            { "nome": "Sangria da Avó", "nome_en": "Granny's Sangria", "preco": 20000, "nota": null }
+          ]
+        },
+        {
+          "id": "vinho-tinto",
+          "nome": "Vinho Tinto",
+          "nome_en": "Red Wine",
+          "itens": [
+            { "nome": "Jasmim", "nome_en": "Jasmim", "preco": 11000, "nota": null },
+            { "nome": "Vinha da Casinha", "nome_en": "Vinha da Casinha", "preco": 11000, "nota": null },
+            { "nome": "Esteva", "nome_en": "Esteva", "preco": 15000, "nota": null },
+            { "nome": "Papa Figos", "nome_en": "Papa Figos", "preco": 18000, "nota": null },
+            { "nome": "Vinho ao Copo", "nome_en": "House Wine by the Glass", "preco": 2000, "nota": null },
+            { "nome": "Silk and Spice", "nome_en": "Silk and Spice", "preco": 22000, "nota": null }
+          ]
+        },
+        {
+          "id": "vinho-verde-rose",
+          "nome": "Vinho Verde / Rosé",
+          "nome_en": "Vinho Verde / Rosé",
+          "itens": [
+            { "nome": "Gazela", "nome_en": "Gazela", "preco": 15000, "nota": null },
+            { "nome": "Mateus Rosé", "nome_en": "Mateus Rosé", "preco": 15000, "nota": null },
+            { "nome": "Casal Garcia (Branco)", "nome_en": "Casal Garcia (White)", "preco": 15000, "nota": null }
+          ]
+        },
+        {
+          "id": "espumante-champanhe",
+          "nome": "Espumante / Champanhe",
+          "nome_en": "Sparkling / Champagne",
+          "itens": [
+            { "nome": "JC Leroux", "nome_en": "JC Leroux", "preco": 20000, "nota": null },
+            { "nome": "Moscato", "nome_en": "Moscato", "preco": 25000, "nota": null },
+            { "nome": "Moët & Chandon Néctar", "nome_en": "Moët & Chandon Nectar", "preco": 134000, "nota": null },
+            { "nome": "Moët & Chandon Ice", "nome_en": "Moët & Chandon Ice", "preco": 150000, "nota": null },
+            { "nome": "Moët Brut", "nome_en": "Moët Brut", "preco": 120000, "nota": null }
+          ]
+        }
+      ]
+    }
+  ]
+}

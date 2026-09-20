@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Gestor de Preços · Sítio da Voinha</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121312" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+    />
+  </head>
+  <body class="min-h-screen">
+    <header class="sticky top-0 z-40 border-b border-outline-variant/40 bg-surface/85 backdrop-blur-md">
+      <div class="mx-auto flex h-16 max-w-4xl items-center justify-between gap-4 px-4 sm:px-6">
+        <div class="flex min-w-0 items-center gap-3">
+          <img src="%BASE_URL%images/logotipo_sitio_da_voinha.svg" alt="Sítio da Voinha" class="logo-sdv h-8 w-auto shrink-0" />
+          <div class="min-w-0">
+            <p class="truncate font-sans text-headline-sm uppercase leading-none tracking-wider text-on-surface">Gestor de Preços</p>
+            <p class="mt-1 font-sans text-label-caps-sm uppercase tracking-[0.18em] text-outline">Sítio da Voinha · Backoffice</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" data-theme-toggle class="flex h-9 w-9 items-center justify-center rounded-none border border-outline-variant/50 bg-surface-lowest text-on-surface" aria-label="Modo escuro">
+            <span data-theme-moon><span data-icon="moon" class="inline-block text-[1.05rem]"></span></span>
+            <span data-theme-sun class="hidden"><span data-icon="sun" class="inline-block text-[1.05rem]"></span></span>
+          </button>
+          <a href="%BASE_URL%" class="inline-flex items-center gap-1.5 rounded-none border border-outline-variant/50 px-3.5 py-2 font-sans text-label-caps-sm uppercase text-on-surface transition-colors hover:border-gold-500 hover:text-primary">
+            <span data-icon="logout" class="text-[1rem]"></span>Site
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+      <!-- Estado do backend -->
+      <div id="banner-backend" class="hidden mb-5" data-banner></div>
+
+      <!-- ===== LOGIN ===== -->
+      <section id="tela-login" class="mx-auto mt-10 max-w-sm">
+        <div class="card overflow-hidden">
+          <div class="bg-primary px-6 py-5 text-center">
+            <span class="mx-auto mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-on-primary/15 text-on-primary"><span data-icon="lock" class="text-[1.4rem]"></span></span>
+            <h1 class="font-sans text-headline-sm uppercase tracking-wider text-on-primary">Área Reservada</h1>
+            <p class="mt-1 font-sans text-body-sm text-on-primary/80">Entre com a conta de administrador para editar preços.</p>
+          </div>
+          <form id="form-login" class="flex flex-col gap-4 p-6">
+            <label class="block">
+              <span class="mb-1.5 block font-sans text-label-caps uppercase text-on-surface">Email</span>
+              <input
+                id="campo-email"
+                type="email"
+                required
+                autocomplete="email"
+                placeholder="nome@email.com"
+                class="w-full rounded-xl border border-outline-variant/50 bg-surface-lowest px-4 py-3 font-sans text-body-lg text-on-surface outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/30"
+              />
+            </label>
+            <label class="block">
+              <span class="mb-1.5 block font-sans text-label-caps uppercase text-on-surface">Password</span>
+              <input
+                id="campo-password"
+                type="password"
+                required
+                autocomplete="current-password"
+                placeholder="••••••••"
+                class="w-full rounded-xl border border-outline-variant/50 bg-surface-lowest px-4 py-3 font-sans text-body-lg text-on-surface outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/30"
+              />
+            </label>
+            <button type="submit" class="btn-primary w-full" data-btn-login><span data-icon="check" class="text-[1.1rem]"></span>Entrar</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ===== BACKOFFICE ===== -->
+      <section id="tela-admin" class="hidden">
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p class="font-script text-2xl italic text-tertiary">Os preços da Vó</p>
+            <h1 class="font-sans text-headline-lg uppercase text-on-surface">Editar Menu</h1>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" id="btn-refresh" class="inline-flex items-center gap-1.5 rounded-none border border-outline-variant/50 px-3.5 py-2 font-sans text-label-caps-sm uppercase text-on-surface transition-colors hover:border-gold-500 hover:text-primary">
+              <span data-icon="refresh" class="text-[1rem]"></span><span data-status-label>Recarregar</span>
+            </button>
+            <button type="button" id="btn-sair" class="inline-flex items-center gap-1.5 rounded-none border border-outline-variant/50 px-3.5 py-2 font-sans text-label-caps-sm uppercase text-on-surface transition-colors hover:border-gold-500 hover:text-primary">
+              <span data-icon="logout" class="text-[1rem]"></span>Sair
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 rounded-xl bg-surface-high p-1 sm:max-w-md" role="tablist" aria-label="Seções do menu">
+          <button type="button" role="tab" class="rounded-none py-2.5 font-sans text-label-caps uppercase transition-all" data-atab="refeicoes">
+            <span class="inline-flex items-center justify-center gap-2 w-full"><span data-icon="utensils" class="text-[1.1rem]"></span>Refeições</span>
+          </button>
+          <button type="button" role="tab" class="rounded-none py-2.5 font-sans text-label-caps uppercase transition-all" data-atab="bebidas">
+            <span class="inline-flex items-center justify-center gap-2 w-full"><span data-icon="bar" class="text-[1.1rem]"></span>Bebidas</span>
+          </button>
+        </div>
+
+        <div class="relative mt-4">
+          <span class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-outline"><span data-icon="search" class="text-[1.05rem]"></span></span>
+          <input
+            id="admin-busca"
+            type="text"
+            placeholder="Filtrar itens…"
+            class="w-full rounded-xl border border-outline-variant/50 bg-surface-lowest py-2.5 pl-11 pr-9 font-sans text-body-md text-on-surface outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/30"
+          />
+          <button type="button" id="admin-limpar" class="absolute right-2.5 top-1/2 hidden -translate-y-1/2 rounded-none p-1.5 text-on-surface-variant hover:bg-surface-high">
+            <span data-icon="close" class="text-[1rem]"></span>
+          </button>
+        </div>
+
+        <div id="ordem-seccoes" class="mt-6"></div>
+
+        <div id="admin-lista" data-admin-lista class="mt-6 scroll-mt-24"></div>
+      </section>
+    </main>
+
+    <div id="toast" class="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center px-4" aria-live="polite"></div>
+
+    <script type="module" src="/src/admin.js"></script>
+  </body>
+</html>
