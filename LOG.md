@@ -2,6 +2,12 @@
 
 Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada datada no topo (ou no fim, de forma consistente) a cada sessão**; registar decisões, mudanças de estado e pendências.
 
+## 2026-09-20 — Favicon PNG/ICO (WhatsApp + Vercel)
+
+- O favicon atual (`public/favicon.svg`, recorte dos talheres) tem suporte limitado em plataformas como WhatsApp/iOS. Geradas versões PNG/ICO via `sharp`: `favicon-16.png`, `favicon-32.png`, `favicon-192.png`, `apple-touch-icon.png` (180×180), `favicon.ico`.
+- `index.html` coloca os PNG/ICO **antes** do `<link rel="icon" type="image/svg+xml">`, de modo que crawlers/dispositivos que não suportam SVG usam o PNG/ICO; browsers modernos continuam com o SVG.
+- Build verificado: PNG/ICO copiados para `dist/images/`; links com `%BASE_URL%` (funciona em Vercel raíz e GH Pages subpath).
+
 ## 2026-09-20 — Vercel: sem ENV, base dinâmica
 
 - Confirmado: zero `import.meta.env`/`process.env`/`VITE_` no código; Supabase URL + anon hardcoded em `supabase/config.js` (públicas por design). **Nenhum ENV é necessário no Vercel** (nada de serverless).

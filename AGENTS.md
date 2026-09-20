@@ -106,7 +106,7 @@ sitio-da-voinha/
 ## Estado atual (2026-09-20)
 
 - **Admin migrado para Supabase Auth (conta do dono)**: schema novo `admin_email`/`eh_admin` **já corrido na cloud** pelo utilizador e verificado (probes: `validar_pin` 404, escritas anon → `false`, `config` protegido, `precos`/`seccoes` legíveis). Faltava apenas testar o login real do dono (`docflex.angola@gmail.com`).
-- **Logotipo oficial + favicon trocados**: `logo-sm.png` (header/rodapé/admin) substituído pelo SVG do logotipo com classe `logo-sdv` (branco puro no dark); favicon = recorte dos talheres; texto ao lado do logo removido. Build verde; `/`, `/admin.html`, `/favicon.svg` e o logo servem 200.
+- **Logotipo oficial + favicon trocados**: `logo-sm.png` substituído pelo SVG com classe `logo-sdv` (branco no dark); texto ao lado removido. **Favicon = recorte dos talheres (`favicon.svg`)** — mas plataformas que não suportam SVG (WhatsApp, iOS) usam as versões PNG/ICO geradas via `sharp`: `favicon-16.png`, `favicon-32.png`, `favicon-192.png`, `apple-touch-icon.png` (180×180) e `favicon.ico`, servidos em `/images/`. Build verde; `/`, `/admin.html`, `/favicon.svg` e o logo servem 200.
 - **Tradução EN completa** (30 categorias, 163 itens, 4 notas com `nota_en`); validação Node OK (itemKeys estáveis).
 - **Ordem das seções reorganizável no admin** (painel com setas ↑/↓, intercala menus, guarda via RPC).
 - **Landing redesenhada** (menu como foco): bloco bem-vindo compacto + abas por categoria (default Entradas) + rodapé enxuto. Listagem em estilo carta clássica (linha pontilhada → preço dorado).
