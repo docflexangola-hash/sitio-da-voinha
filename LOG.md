@@ -2,6 +2,13 @@
 
 Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada datada no topo (ou no fim, de forma consistente) a cada sessão**; registar decisões, mudanças de estado e pendências.
 
+## 2026-09-20 — Vercel: sem ENV, base dinâmica
+
+- Confirmado: zero `import.meta.env`/`process.env`/`VITE_` no código; Supabase URL + anon hardcoded em `supabase/config.js` (públicas por design). **Nenhum ENV é necessário no Vercel** (nada de serverless).
+- `vite.config.js` → `base: process.env.BASE_PATH || '/'`: Vercel default `base:'/'` (raiz do domínio); workflow GH Pages define `BASE_PATH: /sitio-da-voinha/` no passo `npm run build`.
+- `index.html` remove `og:url` (cosmético; `og:image` via `%BASE_URL%` já funciona em ambos).
+- Builds verificados: sem env → paths `/assets/…`; com `BASE_PATH` → `/sitio-da-voinha/assets/…`.
+
 ## 2026-09-20 — Deploy em GitHub Pages (live)
 
 - **Repo**: `docflexangola-hash/sitio-da-voinha` (público) — raiz do repo = a pasta do site. URL: `https://docflexangola-hash.github.io/sitio-da-voinha/`. Admin: `/admin.html`.

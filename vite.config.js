@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/sitio-da-voinha/',
+  base: process.env.BASE_PATH || '/',
   plugins: [],
   build: {
     target: 'es2018',
