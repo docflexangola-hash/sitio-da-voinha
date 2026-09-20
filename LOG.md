@@ -2,6 +2,15 @@
 
 Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada datada no topo (ou no fim, de forma consistente) a cada sessão**; registar decisões, mudanças de estado e pendências.
 
+## 2026-09-20 — Deploy em GitHub Pages (live)
+
+- **Repo**: `docflexangola-hash/sitio-da-voinha` (público) — raiz do repo = a pasta do site. URL: `https://docflexangola-hash.github.io/sitio-da-voinha/`. Admin: `/admin.html`.
+- **Base**: `vite.config.js` → `base: '/sitio-da-voinha/'`; caminhos absolutos do HTML trocados por `%BASE_URL%` (favicon, og:image, preload, logos, hero, wordmark, link admin e voltar). Dev continua em `/`.
+- **Workflow**: `.github/workflows/pages.yml` (push para `main` + dispatch manual) → `npm ci` + `npm run build` + `configure-pages` + `upload-pages-artifact(dist)` + `deploy-pages`. **Foi preciso ativar Pages via API** (`build_type: workflow`) antes da primeira Action (configure-pages falhava com 404).
+- Run #2 sucesso; live verificado 200 em `/`, `/admin.html`, favicon e imagens; assets servidos sob `/sitio-da-voinha/assets/`.
+- Identidade git local: `Docflex Angola` / `docflexangola-hash@users.noreply.github.com`. Remote sem token (credential manager pede no push).
+- **Segurança**: o token clássico partilhado nesta sessão tem escopos totais e deve ser **revogado** pelo dono (Settings → Developer settings → Personal access tokens) — chegou a ser visto em chat.
+
 ## 2026-09-20 — Crédito DOCFLEX ANGOLA no rodapé
 
 - **Rodapé** (fundo): linha "Desenvolvido por **DOCFLEX ANGOLA**" — nome em maiúsculas a negrito, clicável (`https://docflex-site.vercel.app/`, `target="_blank" rel="noopener"`).

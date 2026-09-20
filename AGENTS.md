@@ -110,5 +110,6 @@ sitio-da-voinha/
 - **Tradução EN completa** (30 categorias, 163 itens, 4 notas com `nota_en`); validação Node OK (itemKeys estáveis).
 - **Ordem das seções reorganizável no admin** (painel com setas ↑/↓, intercala menus, guarda via RPC).
 - **Landing redesenhada** (menu como foco): bloco bem-vindo compacto + abas por categoria (default Entradas) + rodapé enxuto. Listagem em estilo carta clássica (linha pontilhada → preço dorado).
-- Build verde; landing + admin servem 200 no `vite preview`.
-- Pendências: teste de login real do dono; deploy (`dist/`) a host estático; opcional: OG meta refinado, Lighthouse mobile, domínio próprio.
+- **Deploy GitHub Pages (LIVE)**: repo `docflexangola-hash/sitio-da-voinha` (público) → `https://docflexangola-hash.github.io/sitio-da-voinha/` (admin: `/admin.html`). **Subpath** → `vite.config.js` usa `base: '/sitio-da-voinha/'` e os caminhos no HTML usam `%BASE_URL%` em vez de `/…` (senão 404 no Pages). Workflow `.github/workflows/pages.yml`: em cada push a `main` faz build+deploy (GH Actions; Pages já ativo com `build_type: workflow`). Para domínio próprio/CNAME no futuro: voltar a `base: '/'`.
+- **Git**: repo tem raiz nesta pasta; identidade local `Docflex Angola` / `docflexangola-hash@users.noreply.github.com`; remote sem token (usa o credential manager do Windows). Fazer `git pull` antes de nova sessão no projeto e `git push` após alterações.
+- Pendências: teste de login real do dono no admin **produção**; opcional: OG meta refinado, Lighthouse mobile, domínio próprio/CNAME.
