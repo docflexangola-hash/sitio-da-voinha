@@ -14,6 +14,13 @@ Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada da
 - `index.html` coloca os PNG/ICO **antes** do `<link rel="icon" type="image/svg+xml">`, de modo que crawlers/dispositivos que não suportam SVG usam o PNG/ICO; browsers modernos continuam com o SVG.
 - Build verificado: PNG/ICO copiados para `dist/images/`; links com `%BASE_URL%` (funciona em Vercel raíz e GH Pages subpath).
 
+## 2026-09-21 — Wordmark do hero corrigido (texto "Sítio da Voinha")
+
+- O wordmark do hero não mostrava corretamente o texto: o path antigo `escrita-voinha-e-talheres` misturava os talheres (draw fora do viewBox 2100×1864) com a caligrafia "Voinha", deixando o texto cortado/invisível.
+- **Reescrito** `public/images/wordmark_sitio_da_voinha.svg` com os dois paths de texto limpos do ficheiro de referência `logotipo_sitio_da_voinha_sem_restaurante.svg` do dono: `#texto-sitio-da` ("SÍTIO DA") + `#texto-voinha` ("VOINHA"), `viewBox="-18 562 2767 1343"`.
+- Regras mantidas: sem metadata C2PA, sem `width/height/style`, `role="img"` + `aria-label="Sítio da Voinha"`.
+- Hero (index.html:120) inalterado — continua a usar `wordmark_sitio_da_voinha.svg` com `.logo-sdv-hero`. Builds (raiz + BASE_PATH) verdes; prévia `devtools-wm_preview.png` confere wordmark branco sobre fundo escuro (~1.15% branco, lettering espalhado — não borrão).
+
 ## 2026-09-21 — og:image = logotipo (preview WhatsApp)
 
 - O preview do WhatsApp agora mostra o **logotipo completo** em vez da foto do hero.
