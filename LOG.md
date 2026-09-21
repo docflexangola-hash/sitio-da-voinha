@@ -14,6 +14,11 @@ Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada da
 - `index.html` coloca os PNG/ICO **antes** do `<link rel="icon" type="image/svg+xml">`, de modo que crawlers/dispositivos que não suportam SVG usam o PNG/ICO; browsers modernos continuam com o SVG.
 - Build verificado: PNG/ICO copiados para `dist/images/`; links com `%BASE_URL%` (funciona em Vercel raíz e GH Pages subpath).
 
+## 2026-09-21 — Scrim da hero: `black` em vez de `ink` (legibilidade no nocturno)
+
+- O texto da hero ficava quase invisível no modo nocturno: o gradiente de véu usava `from-ink/80 via-ink/40`, e o token `ink` **inverte em dark** (`--c-ink: 240 238 233`, quase branco) → véu claro sobre texto branco.
+- Fix em `index.html`: `from-black/80 via-black/40 to-surface`. `black` não inverte com o tema; `to-surface` mantém o blend com a página. Screenshot headless com `.dark` forçado confirmou topo escuro (~55%) + texto branco legível.
+
 ## 2026-09-21 — GitHub Pages eliminado; Vercel único host
 
 - **Removido o GitHub Pages**: apagado `.github/workflows/pages.yml` (+`.github/`) e desativado o site Pages via API (`DELETE /repos/docflexangola-hash/sitio-da-voinha/pages` → confirmado 404 e o antigo `https://docflexangola-hash.github.io/sitio-da-voinha/` deixou de servir).
