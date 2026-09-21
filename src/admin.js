@@ -18,6 +18,10 @@ import {
   authSignOut,
   getSession,
   isConfigured,
+  fetchGaleria,
+  addGaleriaItem,
+  removeGaleriaItem,
+  uploadImgbb,
 } from './supabase.js';
 
 const esc = (s) =>
@@ -32,6 +36,9 @@ let state = {
   tab: 'refeicoes',
   busca: '',
   ordemAberto: false,
+  galeria: [],
+  galeriaCat: 'refeicoes',
+  galeriaUploading: false,
 };
 
 const dirty = new Set();
@@ -133,9 +140,10 @@ async function logoutToLogin() {
 
 async function loadData() {
   state.menus = makeMenus();
-  const [res, ordem] = await Promise.all([fetchOverrides(), fetchOrdem()]);
+  const [res, ordem, gal] = await Promise.all([fetchOverrides(), fetchOrdem(), fetchGaleria()]);
   state.overrides = res.ok ? res.data : [];
   mergeOverrides(state.menus, state.overrides);
+  state.galeria = gal.ok ? gal.data : [];
   state.ordemMap = new Map(
     (ordem.data || [])
       .filter((r) => r && r.cat_id != null && r.ordem != null)
@@ -145,6 +153,7 @@ async function loadData() {
   dirty.clear();
   render();
   renderOrdem();
+  renderGaleriaAdmin();
   updateStatus();
 }
 
@@ -317,13 +326,19 @@ function saveErrorMsg(res) {
   if (res.error === 'not-authenticated') return 'Sessão expirada — entra novamente.';
   if (res.error === 'acesso-nao-admin') return 'Conta sem permissão de administrador.';
   if (res.error === 'schema-ausente') return 'Backend em falta — corre o schema.sql no SQL Editor.';
+  if (res.error === 'sem-imagem') return 'Nenhuma imagem recebida.';
+  if (res.error === 'formato-invalido') return 'Formato de imagem não suportado.';
+  if (res.error === 'imagem-grande') return 'Imagem acima de 32MB.';
+  if (res.error === 'imgbb-nao-configurado') return 'Edge Function sem IMGBB_KEY — configura a env.';
+  if (res.error === 'imgbb-falhou') return 'Não foi possível carregar no imgbb. Tenta de novo.';
+  if (res.error === 'erro-interno') return 'Erro interno do servidor.';
   return `Não guardou: ${res.error || 'erro desconhecido'}`;
 }
 
 function updateStatus() {
   const total = countItems(state.menus);
   const el = document.querySelector('[data-status-label]');
-  if (el) el.textContent = `${total} itens · ${state.overrides.length} na cloud`;
+  if (el) el.textContent = `${total} itens · ${state.overrides.length} na cloud · ${state.galeria.length} fotos`;
 }
 
 // ---------------- ordem das seções
@@ -405,6 +420,139 @@ async function moverSecao(idx, dir) {
   }
 }
 
+// ---------------- galeria (fotos do slider)
+
+function galeriaCatBtn(menuId) {
+  const active = state.galeriaCat === menuId;
+  return `<button type="button" data-galeria-cat="${menuId}" aria-pressed="${active}"
+    class="rounded-none border px-2.5 py-1 font-sans text-label-caps-sm uppercase transition-all ${
+      active
+        ? 'border-gold-500/70 bg-gold-500/10 text-primary'
+        : 'border-outline-variant/50 text-on-surface-variant hover:border-gold-500 hover:text-primary'
+    }">${menuId === 'refeicoes' ? 'Refeições' : 'Bebidas'}</button>`;
+}
+
+function galeriaCatTag(menuId) {
+  return menuId === 'refeicoes' ? 'bg-surface-high text-on-surface-variant' : 'bg-gold-100 text-primary';
+}
+
+function renderGaleriaAdmin() {
+  const el = $('#galeria-admin');
+  el.innerHTML = `
+    <section class="overflow-hidden rounded-xl border border-outline-variant/40 bg-surface-lowest shadow-card">
+      <header class="border-b border-outline-variant/40 px-5 py-4">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 class="font-sans text-headline-sm uppercase tracking-wide text-on-surface">Fotos do slider</h2>
+            <p class="mt-0.5 font-sans text-body-sm text-on-surface-variant">A landing mostra estas fotos por categoria, em ordem aleatória, antes do rodapé.</p>
+          </div>
+          <div class="flex items-center gap-1.5">
+            ${galeriaCatBtn('refeicoes')}
+            ${galeriaCatBtn('bebidas')}
+          </div>
+        </div>
+        <div class="mt-3 flex flex-col gap-2 sm:flex-row">
+          <input type="text" data-galeria-alt placeholder="Nome do prato (opcional)"
+            class="min-w-0 flex-1 rounded-xl border border-outline-variant/50 bg-surface-lowest px-3 py-2.5 font-sans text-body-md text-on-surface outline-none transition-colors focus:border-gold-600" />
+          <button type="button" data-galeria-input ${state.galeriaUploading ? 'disabled' : ''}
+            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-none bg-primary px-4 py-2.5 font-sans text-label-caps uppercase text-on-primary transition-transform hover:brightness-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60">
+            <span data-icon="upload" class="text-[1rem]"></span>
+            ${state.galeriaUploading ? 'A carregar…' : 'Carregar foto'}
+          </button>
+          <input type="file" accept="image/*" data-galeria-file class="sr-only">
+        </div>
+      </header>
+      <ul data-galeria-lista class="divide-y divide-outline-variant/15">
+        ${state.galeria.length
+          ? state.galeria
+              .map(
+                (f) => `
+          <li class="flex items-center gap-3 px-5 py-2.5">
+            <img src="${esc(f.url)}" alt="" class="h-12 w-12 shrink-0 rounded-none border border-outline-variant/40 object-cover" loading="lazy" />
+            <span class="${f.alt ? '' : 'hidden'} min-w-0 flex-1 truncate pr-3 font-sans font-semibold text-on-surface">${esc(f.alt)}</span>
+            <span class="hidden shrink-0 px-2 py-0.5 font-sans text-label-caps-sm uppercase sm:inline-block ${galeriaCatTag(f.menu_id)}">${f.menu_id === 'refeicoes' ? 'Refeições' : 'Bebidas'}</span>
+            <span class="shrink-0 font-sans text-body-sm text-outline sm:hidden">${f.menu_id === 'refeicoes' ? 'Refeições' : 'Bebidas'}</span>
+            <button type="button" data-galeria-del="${f.id}" class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-none border border-outline-variant/50 text-on-surface transition-colors hover:border-gold-600 hover:text-primary" aria-label="Eliminar foto" title="Eliminar">${icon('close', 'text-[1rem]')}</button>
+          </li>`
+              )
+              .join('')
+          : `
+          <li class="px-5 py-8 text-center font-sans text-body-sm text-on-surface-variant">Ainda não há fotos. Escolhe a categoria e carrega a primeira.</li>`}
+      </ul>
+    </section>`;
+  fillIcons();
+}
+
+async function onGaleriaFile(file) {
+  if (!file.type.startsWith('image/')) {
+    toast('Formato de imagem não suportado (usa JPG, PNG ou WebP).', 'err');
+    return;
+  }
+  if (file.size > 32 * 1024 * 1024) {
+    toast('Máximo de 32MB por foto.', 'err');
+    return;
+  }
+  state.galeriaUploading = true;
+  renderGaleriaAdmin();
+  const up = await uploadImgbb(file);
+  if (!up.ok) {
+    state.galeriaUploading = false;
+    renderGaleriaAdmin();
+    toast(saveErrorMsg(up), 'err');
+    if (up.error === 'not-authenticated' || up.error === 'acesso-nao-admin') await logoutToLogin();
+    return;
+  }
+  const alt = $('#galeria-admin [data-galeria-alt]').value.trim();
+  const res = await addGaleriaItem(up.url, alt, state.galeriaCat);
+  state.galeriaUploading = false;
+  if (res.ok) {
+    toast('Foto adicionada ao slider');
+    await loadData();
+    return;
+  }
+  renderGaleriaAdmin();
+  toast(saveErrorMsg(res), 'err');
+  if (res.error === 'not-authenticated' || res.error === 'acesso-nao-admin') await logoutToLogin();
+}
+
+async function onGaleriaDelete(id) {
+  if (!window.confirm('Eliminar esta foto do slider?')) return;
+  const res = await removeGaleriaItem(id);
+  if (res.ok) {
+    toast('Foto eliminada');
+    await loadData();
+    return;
+  }
+  toast(saveErrorMsg(res), 'err');
+  if (res.error === 'not-authenticated' || res.error === 'acesso-nao-admin') await logoutToLogin();
+}
+
+function initGaleriaControls() {
+  const wrap = $('#galeria-admin');
+  if (!wrap) return;
+  wrap.addEventListener('click', (e) => {
+    const del = e.target.closest('[data-galeria-del]');
+    if (del) return onGaleriaDelete(del.getAttribute('data-galeria-del'));
+    const chip = e.target.closest('[data-galeria-cat]');
+    if (chip) {
+      state.galeriaCat = chip.getAttribute('data-galeria-cat');
+      renderGaleriaAdmin();
+      return;
+    }
+    const btn = e.target.closest('[data-galeria-input]');
+    if (btn) {
+      const input = $('#galeria-admin [data-galeria-file]');
+      if (input) input.click();
+    }
+  });
+  wrap.addEventListener('change', (e) => {
+    const input = e.target.closest('[data-galeria-file]');
+    if (!input || !input.files?.length) return;
+    onGaleriaFile(input.files[0]);
+    input.value = '';
+  });
+}
+
 // ---------------- tabs / filters
 
 function renderTabs() {
@@ -483,6 +631,8 @@ function initControls() {
     e.preventDefault();
     e.returnValue = '';
   });
+
+  initGaleriaControls();
 }
 
 // ---------------- boot

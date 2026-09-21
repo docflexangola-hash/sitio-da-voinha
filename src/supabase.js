@@ -192,6 +192,66 @@ export async function savePrice(chave, preco, disponivel) {
   }, false);
 }
 
+// Leitura pública da galeria do slider (RLS permite SELECT a anon)
+export async function fetchGaleria() {
+  if (!isConfigured()) return { ok: false, error: 'not-configured', data: [] };
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/galeria?select=id,menu_id,url,alt,created_at&order=created_at`,
+      { headers: anonHeaders() }
+    );
+    if (!res.ok) {
+      let body = '';
+      try { body = ((await res.json()) || {}).message || ''; } catch { /* ignore */ }
+      return { ok: false, error: `http-${res.status} ${body}`.trim(), data: [] };
+    }
+    const rows = await res.json();
+    return {
+      ok: true,
+      data: rows.map((r) => ({ id: r.id, menu_id: r.menu_id, url: r.url, alt: r.alt || '' })),
+    };
+  } catch (err) {
+    return { ok: false, error: String(err), data: [] };
+  }
+}
+
+// Adiciona uma foto à galeria (RPC que confirma o dono no servidor)
+export async function addGaleriaItem(url, alt, menuId) {
+  if (!isConfigured()) return { ok: false, error: 'not-configured' };
+  return rpcWrite('adicionar_galeria', { p_url: url, p_alt: alt || '', p_menu: menuId }, false);
+}
+
+// Remove uma foto da galeria (RPC que confirma o dono no servidor)
+export async function removeGaleriaItem(id) {
+  if (!isConfigured()) return { ok: false, error: 'not-configured' };
+  return rpcWrite('remover_galeria', { p_id: Number(id) }, false);
+}
+
+// Carrega a imagem para o imgbb via Edge Function (a chave vive no servidor)
+export async function uploadImgbb(file) {
+  if (!isConfigured()) return { ok: false, error: 'nao-configurado' };
+  const session = await getSession();
+  if (!session) return { ok: false, error: 'not-authenticated' };
+  try {
+    const fd = new FormData();
+    fd.append('image', file);
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/upload-imgbb`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: fd,
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) return { ok: false, error: body.error || `http-${res.status}` };
+    if (!body?.url) return { ok: false, error: 'imgbb-falhou' };
+    return { ok: true, url: body.url, delete_url: body.delete_url || '' };
+  } catch (err) {
+    return { ok: false, error: String(err) };
+  }
+}
+
 // Health check do backend (função ping_admin existe?)
 export async function pingBackend() {
   if (!isConfigured()) return { ok: false, error: 'not-configured' };

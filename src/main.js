@@ -3,7 +3,7 @@ import { initTheme, toggleTheme } from './theme.js';
 import { initI18n, setLang, currentSavedLang, t } from './i18n.js';
 import { icon } from './icons.js';
 import { makeMenus, mergeOverrides, flatCategories, displayPrice } from './store.js';
-import { fetchOverrides, fetchOrdem } from './supabase.js';
+import { fetchOverrides, fetchOrdem, fetchGaleria } from './supabase.js';
 
 // ---------------------------------------------------------------- helpers
 
@@ -69,6 +69,11 @@ const state = {
   categorias: [],
   menu: 'refeicoes',
   categoria: 'entradas',
+  galeria: [],
+  galeriaDeck: [],
+  galeriaTimer: null,
+  galeriaRaf: 0,
+  galeriaScrollT: null,
 };
 
 const isEn = () => currentSavedLang() === 'en';
@@ -166,6 +171,141 @@ function renderList(scrollTop = false) {
 function renderMenu() {
   renderTabs();
   renderList();
+  renderGaleria();
+}
+
+// ---------------------------------------------------------------- galeria (slider)
+
+const GALERIA_AUTO_MS = 4500;
+const GALERIA_CARD_GAP = 16;
+
+const galeriaSec = () => document.querySelector('#galeria');
+const galeriaTrack = () => document.querySelector('[data-galeria-track]');
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+}
+
+function galeriaCardHtml(f, i) {
+  const alt = f.alt ? esc(f.alt) : t('a11y_galeria');
+  return `
+    <div class="aspect-[4/5] w-[72vw] max-w-[330px] shrink-0 snap-start overflow-hidden rounded-xl border border-outline-variant/40 bg-surface-lowest shadow-card">
+      <div class="relative h-full w-full">
+        <img src="${esc(f.url)}" alt="${alt}" loading="lazy" decoding="async"
+          class="absolute inset-0 h-full w-full object-cover" />
+        ${f.alt ? `<div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent px-4 pt-12 pb-3"><span class="font-sans text-label-caps uppercase tracking-[0.18em] text-white">${esc(f.alt)}</span></div>` : ''}
+      </div>
+    </div>`;
+}
+
+function updateGaleriaDots(active) {
+  const wrap = document.querySelector('[data-galeria-dots]');
+  if (!wrap) return;
+  const n = state.galeriaDeck.length;
+  if (!n) {
+    wrap.innerHTML = '';
+    return;
+  }
+  wrap.innerHTML = Array.from(
+    { length: n },
+    (_, i) => `
+    <button type="button" role="tab" aria-selected="${i === active}" tabindex="${i === active ? '0' : '-1'}"
+      aria-label="${esc(t('a11y_galeria_dot'))} ${i + 1}" data-galeria-dot="${i}"
+      class="h-1.5 rounded-none border-0 bg-none p-0 transition-all duration-300 ${i === active ? 'w-6 bg-primary' : 'w-1.5 bg-outline hover:bg-gold-500'}"></button>`
+  ).join('');
+}
+
+function onGaleriaScroll() {
+  if (state.galeriaRaf) return;
+  state.galeriaRaf = requestAnimationFrame(() => {
+    state.galeriaRaf = 0;
+    const track = galeriaTrack();
+    const card = track?.firstElementChild;
+    if (!card) return;
+    const active = Math.min(
+      state.galeriaDeck.length - 1,
+      Math.max(0, Math.round(track.scrollLeft / (card.offsetWidth + GALERIA_CARD_GAP)))
+    );
+    updateGaleriaDots(active);
+  });
+  if (prefersReducedMotion()) return;
+  clearTimeout(state.galeriaScrollT);
+  state.galeriaScrollT = setTimeout(restartGaleriaAutoplay, 2200);
+}
+
+function restartGaleriaAutoplay() {
+  stopGaleriaAutoplay();
+  if (prefersReducedMotion()) return;
+  state.galeriaTimer = setInterval(() => nextGaleria(1), GALERIA_AUTO_MS);
+}
+
+function stopGaleriaAutoplay() {
+  if (state.galeriaTimer) clearInterval(state.galeriaTimer);
+  state.galeriaTimer = null;
+}
+
+function nextGaleria(dir) {
+  const track = galeriaTrack();
+  if (!track) return;
+  const cards = [...track.children];
+  if (cards.length < 2 || !cards[0].offsetWidth) return;
+  const step = cards[0].offsetWidth + GALERIA_CARD_GAP;
+  const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
+  let target = track.scrollLeft + step * dir;
+  if (dir > 0 && atEnd) target = 0;
+  else if (dir < 0 && track.scrollLeft <= 0) target = track.scrollWidth;
+  track.scrollTo({ left: target, behavior: 'smooth' });
+}
+
+function renderGaleria() {
+  const sec = galeriaSec();
+  if (!sec) return;
+  stopGaleriaAutoplay();
+  const deck = shuffle(state.galeria.filter((f) => f.menu_id === state.menu));
+  state.galeriaDeck = deck;
+  if (!deck.length) {
+    sec.hidden = true;
+    updateGaleriaDots(0);
+    return;
+  }
+  const track = galeriaTrack();
+  track.innerHTML = deck.map(galeriaCardHtml).join('');
+  track.scrollLeft = 0;
+  updateGaleriaDots(0);
+  sec.hidden = false;
+  restartGaleriaAutoplay();
+}
+
+function initGaleria() {
+  const root = document.querySelector('[data-galeria]');
+  if (!root) return;
+  root.addEventListener('click', (e) => {
+    const dot = e.target.closest('[data-galeria-dot]');
+    if (dot) {
+      const track = galeriaTrack();
+      const card = track?.children[Number(dot.getAttribute('data-galeria-dot'))];
+      if (card) track.scrollTo({ left: card.offsetLeft, behavior: 'smooth' });
+      return;
+    }
+    if (e.target.closest('[data-galeria-prev]')) return nextGaleria(-1);
+    if (e.target.closest('[data-galeria-next]')) return nextGaleria(1);
+  });
+  galeriaTrack()?.addEventListener('scroll', onGaleriaScroll, { passive: true });
+  root.addEventListener('pointerenter', stopGaleriaAutoplay);
+  root.addEventListener('pointerleave', restartGaleriaAutoplay);
+  root.addEventListener('touchstart', stopGaleriaAutoplay, { passive: true });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopGaleriaAutoplay();
+    else restartGaleriaAutoplay();
+  });
 }
 
 function initMenu() {
@@ -208,7 +348,8 @@ function initMenu() {
 
 async function loadData() {
   state.menus = makeMenus();
-  const [res, ordem] = await Promise.all([fetchOverrides(), fetchOrdem()]);
+  const [res, ordem, gal] = await Promise.all([fetchOverrides(), fetchOrdem(), fetchGaleria()]);
+  state.galeria = gal.ok ? gal.data : [];
   if (res.ok) {
     state.overrides = res.data;
     mergeOverrides(state.menus, state.overrides);
@@ -244,6 +385,7 @@ function boot() {
   initI18n();
   initHeader();
   initMenu();
+  initGaleria();
   loadData();
 }
 

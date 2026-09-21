@@ -46,6 +46,20 @@ comment on table public.seccoes is
   'Ordem global das seções nas abas do menu (lista intercalada entre Refeições e Bebidas)';
 
 -- ------------------------------------------------------------
+-- 1c. Tabela da galeria (fotos do slider, por categoria de menu)
+-- ------------------------------------------------------------
+create table if not exists public.galeria (
+  id         bigint generated always as identity primary key,
+  menu_id    text not null check (menu_id in ('refeicoes', 'bebidas')),
+  url        text not null,               -- url final (ex.: display_url do imgbb)
+  alt        text not null default '',    -- etiqueta do prato (opcional)
+  created_at timestamptz not null default now()
+);
+
+comment on table public.galeria is
+  'Fotos do slider da landing, agrupadas por menu (refeicoes|bebidas)';
+
+-- ------------------------------------------------------------
 -- 2. Tabela de configuração (email da conta administradora)
 -- ------------------------------------------------------------
 create table if not exists public.config (
@@ -70,6 +84,7 @@ delete from public.config where chave = 'pin_hash';
 alter table public.precos enable row level security;
 alter table public.config  enable row level security;
 alter table public.seccoes enable row level security;
+alter table public.galeria enable row level security;
 
 -- anon e authenticated podem LER os preços (a landing)
 drop policy if exists "precos_leitura_publica" on public.precos;
@@ -81,6 +96,12 @@ create policy "precos_leitura_publica"
 drop policy if exists "seccoes_leitura_publica" on public.seccoes;
 create policy "seccoes_leitura_publica"
   on public.seccoes for select
+  using (true);
+
+-- anon e authenticated podem LER a galeria (a landing)
+drop policy if exists "galeria_leitura_publica" on public.galeria;
+create policy "galeria_leitura_publica"
+  on public.galeria for select
   using (true);
 
 -- ninguém lê a tabela config diretamente (só as funções internas)
@@ -174,12 +195,54 @@ as $$
   select true;
 $$;
 
+-- Adiciona uma foto à galeria (apenas o dono)
+create or replace function public.adicionar_galeria(
+  p_url text,
+  p_alt text,
+  p_menu text
+) returns boolean
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+begin
+  if not coalesce(public.eh_admin(), false) then
+    return false;
+  end if;
+  if p_url is null or p_url = '' then
+    return false;
+  end if;
+  insert into public.galeria (menu_id, url, alt)
+  values (coalesce(p_menu, 'refeicoes'), p_url, coalesce(p_alt, ''));
+  return true;
+end;
+$$;
+
+-- Remove uma foto da galeria (apenas o dono)
+create or replace function public.remover_galeria(p_id bigint)
+returns boolean
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+begin
+  if not coalesce(public.eh_admin(), false) then
+    return false;
+  end if;
+  delete from public.galeria where id = p_id;
+  return true;
+end;
+$$;
+
 -- ------------------------------------------------------------
 -- 5. Permissões
 -- ------------------------------------------------------------
 grant usage on schema public to anon, authenticated;
 grant select on public.precos to anon, authenticated;
 grant select on public.seccoes to anon, authenticated;
+grant select on public.galeria to anon, authenticated;
 grant execute on function public.atualizar_preco(text, integer, boolean) to anon, authenticated;
 grant execute on function public.atualizar_ordem(text[]) to anon, authenticated;
 grant execute on function public.ping_admin() to anon, authenticated;
+grant execute on function public.adicionar_galeria(text, text, text) to anon, authenticated;
+grant execute on function public.remover_galeria(bigint) to anon, authenticated;

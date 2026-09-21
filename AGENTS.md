@@ -7,7 +7,7 @@ Guia de contexto para agentes/sessões que trabalhem neste projeto. Lê-o antes 
 
 Landing page estática do restaurante **Sítio da Voinha — Restaurante & Playground** (Avenida dos Restaurantes, Praia Morena, Benguela — Angola), com um **painel admin separado** para editar preços e disponibilidade sem mexer no código.
 
-- Estrutura da landing (foco = menu): bloco de boas-vindas compacto (fundo `hero-1600/900.jpg`) → secção **Menu** com **dois estágios**: chips "Refeições"/"Bebidas" (grupo de menus) e, abaixo, **uma aba por categoria do menu ativo** (default: a primeira secção da ordem vigente dentro desse menu — "Pequeno Almoço da Avó"/Entradas se não houver ordem cloud) → despedida da Vó (um script accent por ecrã, usado aqui) → **secção Instagram** (embed oficial `instagram.com/o_sitio_da_voinhaa/embed/` num card com CTA "Seguir"; iframe branco não estilizável, `loading="lazy"`, `h-[600px]`; handle = `o_sitio_da_voinhaa`) → rodapé compacto (morada, horário, telefone/WhatsApp, micro-copy com link admin e crédito "Desenvolvido por DOCFLEX ANGOLA" → `https://docflex-site.vercel.app/`).
+- Estrutura da landing (foco = menu): bloco de boas-vindas compacto (fundo `hero-1600/900.jpg`) → secção **Menu** com **dois estágios**: chips "Refeições"/"Bebidas" (grupo de menus) e, abaixo, **uma aba por categoria do menu ativo** (default: a primeira secção da ordem vigente dentro desse menu — "Pequeno Almoço da Avó"/Entradas se não houver ordem cloud) → **secção Galeria** (slider de fotos dos pratos por categoria, entre o menu e o rodapé: fotos `galeria` carregadas no admin via imgbb; ordem aleatória, snap + autoplay + setas; `hidden` quando a categoria não tem fotos) → despedida da Vó (um script accent por ecrã, usado aqui) → rodapé compacto (morada, horário, telefone/WhatsApp, micro-copy com link admin e crédito "Desenvolvido por DOCFLEX ANGOLA" → `https://docflex-site.vercel.app/`).
 - Público: clientes (mobile-first, vêm do QR/menu físico). Idioma: PT/EN (EN é extra minimal). Admin: apenas PT.
 - Objetivo: nunca precisar de redeploy para mudar um preço — os preços são editados na cloud (Supabase).
 - Contacto: tel `+244925963030`, WhatsApp `https://wa.me/244925963030`.
@@ -44,8 +44,11 @@ sitio-da-voinha/
 │   └── data/menu.json  Cardápio base (preços em Kz) + `nome_en`/`nota_en` (tradução EN) — NÃO é a fonte viva de preços
 ├── supabase/
 │   ├── config.js       SUPABASE_URL + anon key (públicas por design)
-│   └── schema.sql      Migração: tabelas (precos, config, seccoes), RLS, funções
-│                       (eh_admin, atualizar_preco, atualizar_ordem, ping_admin) + config.admin_email
+│   ├── schema.sql      Migração: tabelas (precos, config, seccoes, galeria), RLS, funções
+│   │                   (eh_admin, atualizar_preco, atualizar_ordem, ping_admin,
+│   │                    adicionar_galeria, remover_galeria) + config.admin_email
+│   └── functions/upload-imgbb/  Edge Function (Deno): recebe a imagem + JWT do dono, valida
+│                                eh_admin() e carrega no imgbb (chave IMGBB_KEY só em env)
 ├── public/
 │   ├── favicon.svg     Ícone da aba do browser (recorte do logotipo: garfo/colher cruzados, `viewBox` fixo)
 │   └── images/         hero-1600/900.jpg (fundo do bloco bem-vindo, derivados do PNG cinematográfico do dono, 1930×815), logotipo_sitio_da_voinha.svg (logo oficial), wordmark_sitio_da_voinha.svg (lettering do hero)
@@ -66,7 +69,7 @@ sitio-da-voinha/
 11. **Fallback**: sem rede/Supabase a landing mostra os preços do JSON e a ordem default (sem prémio de erro).
 
 ### Endpoints/serviços usados (`src/supabase.js`)
-`GET /rest/v1/precos?select=*` · `GET /rest/v1/seccoes?select=cat_id,ordem&order=ordem` · `POST /rest/v1/rpc/ping_admin` · `POST /rest/v1/rpc/atualizar_preco` · `POST /rest/v1/rpc/atualizar_ordem` · `POST /auth/v1/token?grant_type=password` (login) · `POST /auth/v1/token?grant_type=refresh_token` (refresh) · `POST /auth/v1/logout`. Headers: `apikey` + `Authorization: Bearer <anon ou access_token>` + `Content-Type: application/json`.
+`GET /rest/v1/precos?select=*` · `GET /rest/v1/seccoes?select=cat_id,ordem&order=ordem` · `POST /rest/v1/rpc/ping_admin` · `POST /rest/v1/rpc/atualizar_preco` · `POST /rest/v1/rpc/atualizar_ordem` · `GET /rest/v1/galeria?select=id,menu_id,url,alt,created_at&order=created_at` · `POST /rest/v1/rpc/adicionar_galeria` · `POST /rest/v1/rpc/remover_galeria` · `POST /functions/v1/upload-imgbb` (upload de fotos do slider, requer JWT do dono) · `POST /auth/v1/token?grant_type=password` (login) · `POST /auth/v1/token?grant_type=refresh_token` (refresh) · `POST /auth/v1/logout`. Headers: `apikey` + `Authorization: Bearer <anon ou access_token>` + `Content-Type: application/json`.
 
 ### Sessão do admin (Raw REST, sem SDK)
 - Login: `authSignIn(email, password)` → grava `sdv-session` em localStorage (`{access_token, refresh_token, expires_at}`); sem rede precisa de nada mais (0 dependências de runtime).
@@ -81,6 +84,7 @@ sitio-da-voinha/
   (atualmente `docflex.angola@gmail.com`) e as funções de escrita verificam `auth.email = admin_email` (`eh_admin`).
   O email/password do dono e credenciais nunca entram no bundle. Sem privilegiar autosignup no Dashboard.
   **O email do dono NUNCA aparece no frontend** (nem placeholder, nem textos de ajuda, nem logs visíveis) — existe só no `schema.sql` e em docs de dev.
+- **Galeria (fotos do slider)**: a tabela `galeria` é pública para SELECT (RLS), mas a escrita é só via RPCs `adicionar_galeria` / `remover_galeria` (SECURITY DEFINER, confirmam `eh_admin()`). O upload da foto usa a **Edge Function `upload-imgbb`** que volta a validar `eh_admin()` no servidor e carrega a imagem no imgbb — a chave `IMGBB_KEY` **vive apenas na env da função** (`supabase functions deploy upload-imgbb` + `supabase secrets set --env-name IMGBB_KEY <chave>`), nunca no repo/bundle. Se a chave for exposta, o dono deve rotá-la no imgbb.
 - **Sessão no browser**: `sdv-session` em localStorage (JWT de ~1 h + refresh), enviado só nas escritas do admin.
 - `.gitignore` cobre segredos e `dist/`. Revisitar se aparecerem ficheiros sensíveis novos.
 
@@ -97,6 +101,7 @@ sitio-da-voinha/
   `prefers-color-scheme` como regra default (substituída pela janela horária).
 - **Ícones**: adicionar SVGs a `src/icons.js` e usar `icon('nome')` / `data-icon`. Sem biblioteca de ícones.
 - **Botões**: visual perfeitamente retangular — `.btn`/`.chip` usam `rounded-none`; não reintroduzir `rounded-full/lg/xl` em botões (inputs mantêm `rounded-xl`).
+- **Slider da galeria**: cartões 4:5 (`aspect-[4/5]`, `rounded-xl`, `snap-start`), ordem aleatória (Fisher–Yates) em cada render/troca de menu, autoplay ~4.5 s com pausa em hover/touch/`prefers-reduced-motion`/aba oculta, setas laterais e dots **rectangulares** (`rounded-none`); secção fica `hidden` se a categoria não tiver fotos (sem prémio de erro, como o resto). Sem accent de script (a Vó já fala uma vez).
 - **Listagem de pratos**: estilo carta clássico — 1 coluna, nome à esquerda → linha pontilhada (`border-b border-dotted`) → preço dourado à direita (`tnum`, `whitespace-nowrap`); nota por baixo da linha; esgotado com riscado + badge e `opacity-70`. Sem cartão fechado (lista aberta com `divide-y`).
 - **Imagens**: locais e otimizadas em `public/images/` (as fotos foram geradas por IA num CDN externo em 2026 — confiar nos `alt`, o modelo não vê imagens). Não meter CDNs externos; favicon é SVG inline local.
 - **Logotipo**: usar sempre `public/images/logotipo_sitio_da_voinha.svg` com a classe `logo-sdv`. **No dark o logotipo é 100% branco** — `.dark .logo-sdv { filter: brightness(0) invert(1); }`; nunca acrescentar outras camadas de texto junto do logo (o nome "Sítio da Voinha" já está dentro do SVG). Os SVGs em `public/` ficam **limpos**: sem metadata C2PA, sem `xmlns:c2pa`, sem `width/height/style` (só `viewBox`). O PNG `logo-sm.png` foi retirado — não voltar a usar.
@@ -115,7 +120,9 @@ sitio-da-voinha/
 
 ## Estado atual (2026-09-21)
 
-- **Bloco Instagram na landing (entre o menu e o rodapé)**: embed oficial do perfil `https://www.instagram.com/o_sitio_da_voinhaa/embed/` (conta pública, verificada pelo dono) dentro de um card `rounded-xl` (`h-[600px]`, `loading="lazy"`, fundo branco do iframe não estilizável) + CTA "Seguir" (abre o perfil em nova aba). Eyebrow dourado e títulos iguais às outras secções; **sem accent de script** (a Vó já fala uma vez por ecrã); ordem das fotos é a do próprio Instagram (sem aleatório). Novas chaves i18n pt/en: `insta_*`. O `stkn=` do link de partilha pertencia a uma conta privada — o embed **não** mostra fotos se a conta ficar privada.
+- **Bloco Instagram removido** (o dono não gostou do embed). Substituído por um **slider de fotos próprio** entre o menu e o rodapé: secção `#galeria` com header (eyebrow `galeria_eyebrow`/`galeria_title` + fio dourado), track `snap-x` de cartões 4:5 (`w-[72vw] max-w-[330px]`), setas laterais (ícones `arrowLeft`/`arrowRight`) + dots rectangulares, autoplay de 4.5 s e **ordem aleatória (Fisher–Yates)** em cada render/troca de menu. Filtra por `state.menu` (`menu_id` em `refeicoes`/`bebidas`). A secção só aparece se a categoria tiver fotos (`hidden` em vazio/backend ausente). Chaves i18n pt/en: `galeria_*` + `a11y_galeria*` (`insta_*` removidas).
+- **Zona "Fotos do slider" no admin** (antes da lista de preços): chips de categoria, campo opcional "Nome do prato" (→ `alt`), botão "Carregar foto" → Edge Function `upload-imgbb` → imgbb → RPC `adicionar_galeria`; lista de fotos com miniatura, tag de categoria e eliminar → RPC `remover_galeria`. Contagem de fotos no status (`· N fotos`). Erros mapeados em `saveErrorMsg` (sem-imagem, formato-invalido, imagem-grande, imgbb-falhou, imgbb-nao-configurado, erro-interno).
+- **Pré-requisitos da feature (lado do dono)**: correr o bloco `galeria` de `supabase/schema.sql` no SQL Editor (tabela + RLS + RPCs + grants) e depois `supabase functions deploy upload-imgbb` + `supabase secrets set --env-name IMGBB_KEY <chave>` (a chave só em env). Sem estes passos o admin mostra "Backend em falta" e a landing mantém a secção oculta.
 - **Polish de acessibilidade e robustez (impeccable)**: landing com **menu em dois estágios** (chips "Refeições"/"Bebidas" com `aria-pressed` + abas por categoria com `role=tab`/`aria-selected`/roving e `aria-controls` → `#lista-categoria` com `aria-labelledby`); despedida da Vó (script accent único) acima do rodapé; rodapé/micro-copy com `text-on-surface-variant` (AA na light); toggle de tema com `aria-label` por idioma. Admin com **guarda de alterações não guardadas** (`dirty` Set → confirm em troca de tab/busca ativa não reinicia, refresh, Sair, `beforeunload`; `.row-dirty` visual), botão guardar desativado durante o save, painel "Ordem das Seções" **colapsável** (`<details>` + chevron), switch de disponibilidade com `role=switch`/`aria-checked` + rótulo "Disponível"/"Esgotado", input de preço `text`/`inputmode=numeric` com helper `= < valor formatado >` e normalização no blur, validação (>0) e aviso de salto >50% face ao base, tags "Bebidas" com `text-primary`; tabs com `aria-selected` + `aria-labelledby` do painel; `#btn-refresh` com nome acessível fixo + status em `<p role="status">`; botão "Site" usa ícone `external`. Token semântico `chip-active` agora usa `text-primary` na light (AA).
 - (restante estado de 2026-09-20 mantém-se: admin Supabase Auth, logotipo/favicon, tradução EN, ordem de seções, deploy único Vercel…)
 
