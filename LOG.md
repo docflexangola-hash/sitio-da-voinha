@@ -14,6 +14,12 @@ Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada da
 - `index.html` coloca os PNG/ICO **antes** do `<link rel="icon" type="image/svg+xml">`, de modo que crawlers/dispositivos que não suportam SVG usam o PNG/ICO; browsers modernos continuam com o SVG.
 - Build verificado: PNG/ICO copiados para `dist/images/`; links com `%BASE_URL%` (funciona em Vercel raíz e GH Pages subpath).
 
+## 2026-09-21 — GitHub Pages eliminado; Vercel único host
+
+- **Removido o GitHub Pages**: apagado `.github/workflows/pages.yml` (+`.github/`) e desativado o site Pages via API (`DELETE /repos/docflexangola-hash/sitio-da-voinha/pages` → confirmado 404 e o antigo `https://docflexangola-hash.github.io/sitio-da-voinha/` deixou de servir).
+- **`vite.config.js`**: `base: '/'` fixo (removido `process.env.BASE_PATH || '/'` — o subpath só servia o Pages). Em Vercel o site fica na raiz do domínio.
+- **Vercel = único host**: cada push a `main` faz deploy automático (não precisa de ENV). Build local verde com paths raiz.
+
 ## 2026-09-21 — Wordmark do hero corrigido (texto "Sítio da Voinha")
 
 - O wordmark do hero não mostrava corretamente o texto: o path antigo `escrita-voinha-e-talheres` misturava os talheres (draw fora do viewBox 2100×1864) com a caligrafia "Voinha", deixando o texto cortado/invisível.
