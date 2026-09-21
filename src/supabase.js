@@ -235,19 +235,28 @@ export async function uploadImgbb(file) {
   try {
     const fd = new FormData();
     fd.append('image', file);
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/upload-imgbb`, {
-      method: 'POST',
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${session.access_token}`,
-      },
-      body: fd,
-    });
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 30_000);
+    let res;
+    try {
+      res = await fetch(`${SUPABASE_URL}/functions/v1/upload-imgbb`, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: fd,
+        signal: ctrl.signal,
+      });
+    } finally {
+      clearTimeout(timer);
+    }
     const body = await res.json().catch(() => ({}));
     if (!res.ok) return { ok: false, error: body.error || `http-${res.status}` };
     if (!body?.url) return { ok: false, error: 'imgbb-falhou' };
     return { ok: true, url: body.url, delete_url: body.delete_url || '' };
   } catch (err) {
+    if (err?.name === 'AbortError') return { ok: false, error: 'timeout' };
     return { ok: false, error: String(err) };
   }
 }

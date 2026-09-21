@@ -4,6 +4,7 @@ const IMGBB_KEY = Deno.env.get('IMGBB_KEY') ?? '';
 const URL = Deno.env.get('SUPABASE_URL') ?? '';
 const ANON = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
 const MAX_BYTES = 32 * 1024 * 1024;
+const IMGBB_TIMEOUT_MS = 20_000;
 
 const json = (status, body) =>
   new Response(JSON.stringify(body), {
@@ -35,8 +36,20 @@ Deno.serve(async (req) => {
     const imgbb = new FormData();
     imgbb.set('key', IMGBB_KEY);
     imgbb.set('image', file);
-    const r = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: imgbb });
-    const data = await r.json().catch(() => ({}));
+    let data;
+    try {
+      const r = await fetch('https://api.imgbb.com/1/upload', {
+        method: 'POST',
+        body: imgbb,
+        signal: AbortSignal.timeout(IMGBB_TIMEOUT_MS),
+      });
+      data = await r.json().catch(() => null);
+    } catch (err) {
+      if (err instanceof DOMException && err.name === 'TimeoutError') {
+        return json(504, { error: 'imgbb-timeout' });
+      }
+      return json(502, { error: 'imgbb-falhou' });
+    }
     if (!data?.data?.display_url) return json(502, { error: 'imgbb-falhou' });
 
     return json(200, { url: data.data.display_url, delete_url: data.data.delete_url ?? '' });

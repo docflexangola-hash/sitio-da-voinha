@@ -332,6 +332,7 @@ function saveErrorMsg(res) {
   if (res.error === 'imgbb-nao-configurado') return 'Edge Function sem IMGBB_KEY — configura a env.';
   if (res.error === 'imgbb-falhou') return 'Não foi possível carregar no imgbb. Tenta de novo.';
   if (res.error === 'erro-interno') return 'Erro interno do servidor.';
+  if (res.error === 'timeout') return 'O carregamento demorou demasiado — tenta de novo.';
   return `Não guardou: ${res.error || 'erro desconhecido'}`;
 }
 
@@ -494,25 +495,34 @@ async function onGaleriaFile(file) {
   }
   state.galeriaUploading = true;
   renderGaleriaAdmin();
-  const up = await uploadImgbb(file);
-  if (!up.ok) {
+  try {
+    const up = await uploadImgbb(file);
+    if (!up.ok) {
+      toast(saveErrorMsg(up), 'err');
+      if (up.error === 'not-authenticated' || up.error === 'acesso-nao-admin') {
+        await logoutToLogin();
+        return;
+      }
+      return;
+    }
+    const alt = $('#galeria-admin [data-galeria-alt]').value.trim();
+    const res = await addGaleriaItem(up.url, alt, state.galeriaCat);
+    if (res.ok) {
+      toast('Foto adicionada ao slider');
+      await loadData();
+      return;
+    }
+    toast(saveErrorMsg(res), 'err');
+    if (res.error === 'not-authenticated' || res.error === 'acesso-nao-admin') {
+      await logoutToLogin();
+      return;
+    }
+  } catch {
+    toast('Não foi possível carregar a foto. Tenta de novo.', 'err');
+  } finally {
     state.galeriaUploading = false;
     renderGaleriaAdmin();
-    toast(saveErrorMsg(up), 'err');
-    if (up.error === 'not-authenticated' || up.error === 'acesso-nao-admin') await logoutToLogin();
-    return;
   }
-  const alt = $('#galeria-admin [data-galeria-alt]').value.trim();
-  const res = await addGaleriaItem(up.url, alt, state.galeriaCat);
-  state.galeriaUploading = false;
-  if (res.ok) {
-    toast('Foto adicionada ao slider');
-    await loadData();
-    return;
-  }
-  renderGaleriaAdmin();
-  toast(saveErrorMsg(res), 'err');
-  if (res.error === 'not-authenticated' || res.error === 'acesso-nao-admin') await logoutToLogin();
 }
 
 async function onGaleriaDelete(id) {
