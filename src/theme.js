@@ -21,7 +21,9 @@ function updateIcons(theme) {
     const sun = btn.querySelector('[data-theme-sun]');
     if (moon) moon.classList.toggle('hidden', theme === 'dark');
     if (sun) sun.classList.toggle('hidden', theme !== 'dark');
-    btn.setAttribute('aria-label', theme === 'dark' ? 'Modo claro' : 'Modo escuro');
+    const en = document.documentElement.lang === 'en';
+    btn.setAttribute('aria-label', theme === 'dark' ? (en ? 'Light mode' : 'Modo claro') : (en ? 'Dark mode' : 'Modo escuro'));
+    btn.setAttribute('aria-pressed', String(theme === 'dark'));
   });
 }
 

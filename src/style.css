@@ -142,7 +142,24 @@
     @apply chip border border-outline/40 bg-surface-lowest text-on-surface-variant hover:border-gold-500/60 hover:text-on-surface;
   }
   .chip-active {
-    @apply chip bg-gold-100 text-gold-600 border border-gold-500/60;
+    @apply chip bg-gold-100 text-primary border border-gold-500/60;
+  }
+  .row-dirty {
+    position: relative;
+    background: rgb(var(--c-gold-100) / 0.35);
+  }
+  .row-dirty::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 3px;
+    border-radius: 2px;
+    background: rgb(var(--c-gold-600));
+  }
+  .row-dirty [data-save] {
+    background: rgb(var(--c-gold-600));
   }
   .card {
     @apply rounded-xl bg-surface-lowest shadow-card;

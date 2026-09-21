@@ -31,7 +31,24 @@ let state = {
   ordemMap: new Map(),
   tab: 'refeicoes',
   busca: '',
+  ordemAberto: false,
 };
+
+const dirty = new Set();
+
+function markDirty(row) {
+  dirty.add(row.getAttribute('data-chave'));
+  row.classList.add('row-dirty');
+  const btn = row.querySelector('[data-save]');
+  if (btn) btn.title = 'Guardar alterações';
+}
+
+function confirmDiscard() {
+  if (!dirty.size) return true;
+  return window.confirm(
+    `${dirty.size} ${dirty.size === 1 ? 'alteração ainda não guardada' : 'alterações ainda não guardadas'}. Descartar?`
+  );
+}
 
 const $ = (sel) => document.querySelector(sel);
 const toastEl = () => $('#toast');
@@ -125,6 +142,7 @@ async function loadData() {
       .map((r) => [r.cat_id, r.ordem])
   );
   setBackendBanner();
+  dirty.clear();
   render();
   renderOrdem();
   updateStatus();
@@ -157,7 +175,7 @@ function render() {
         <div class="mb-2 flex items-center gap-3">
           <h2 class="font-sans text-headline-sm uppercase tracking-wide text-on-surface">${esc(cat.nome)}</h2>
           <span class="h-px flex-1 bg-outline-variant/60"></span>
-          <span class="shrink-0 rounded-full bg-gold-100 px-2.5 py-0.5 font-sans text-label-caps-sm uppercase text-gold-600">${items.length}</span>
+          <span class="shrink-0 rounded-full bg-gold-100 px-2.5 py-0.5 font-sans text-label-caps-sm uppercase text-primary">${items.length}</span>
         </div>
         <div class="card divide-y divide-outline-variant/40 overflow-hidden">
           ${items
@@ -168,26 +186,32 @@ function render() {
               const disp = ov ? ov.disponivel : true;
               const changed = ov ? true : false;
               return `
-              <div class="flex flex-col gap-3 p-3.5 sm:flex-row sm:items-center sm:justify-between" data-row data-chave="${esc(key)}" data-name="${esc(it.nome)}">
+              <div class="flex flex-col gap-3 p-3.5 sm:flex-row sm:items-center sm:justify-between" data-row data-chave="${esc(key)}" data-name="${esc(it.nome)}" data-base="${it.preco}">
                 <div class="min-w-0 flex-1">
                   <div class="flex flex-wrap items-center gap-2">
                     <h3 class="font-sans font-semibold text-on-surface">${esc(it.nome)}</h3>
-                    ${changed ? `<span class="inline-flex items-center gap-1 rounded-full bg-gold-100 px-2 py-0.5 font-sans text-label-caps-sm uppercase text-gold-600">${icon('edit', 'text-[0.85rem]')}editado</span>` : ''}
+                    ${changed ? `<span class="inline-flex items-center gap-1 rounded-full bg-gold-100 px-2 py-0.5 font-sans text-label-caps-sm uppercase text-primary">${icon('edit', 'text-[0.85rem]')}editado</span>` : ''}
                   </div>
                   ${it.nota ? `<p class="mt-0.5 font-sans text-body-sm text-on-surface-variant">${esc(it.nota)}</p>` : ''}
                   <p class="mt-1 font-sans text-body-sm text-outline">${esc(key)}</p>
                 </div>
                 <div class="flex shrink-0 items-center gap-3">
-                  <label class="relative inline-flex cursor-pointer items-center" title="Disponível">
-                    <input type="checkbox" data-avail ${disp ? 'checked' : ''} class="peer sr-only" />
-                    <span class="h-6 w-11 rounded-full bg-surface-highest transition-colors peer-checked:bg-primary relative"></span>
-                    <span class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5"></span>
-                  </label>
-                  <div class="relative">
-                    <input type="number" min="0" step="100" value="${preco}" data-preco class="tnum w-28 rounded-lg border border-outline-variant/50 bg-surface-lowest px-3 py-2 pr-10 font-sans text-price-display text-on-surface outline-none focus:border-gold-600" />
-                    <span class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 font-sans text-label-caps-sm uppercase text-outline">Kz</span>
+                  <div class="flex items-center gap-2">
+                    <label class="relative inline-flex cursor-pointer items-center" title="${disp ? 'Disponível' : 'Esgotado'}">
+                      <input type="checkbox" data-avail role="switch" aria-checked="${String(disp)}" aria-label="${disp ? 'Disponível' : 'Esgotado'}" ${disp ? 'checked' : ''} class="peer sr-only" />
+                      <span class="h-6 w-11 rounded-full bg-surface-highest transition-colors peer-checked:bg-primary relative"></span>
+                      <span class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5"></span>
+                    </label>
+                    <span data-avail-text class="w-20 font-sans text-label-caps-sm uppercase text-on-surface-variant">${disp ? 'Disponível' : 'Esgotado'}</span>
                   </div>
-                  <button type="button" data-save class="inline-flex h-10 w-10 items-center justify-center rounded-none bg-primary text-on-primary transition-transform active:scale-95" aria-label="Guardar ${esc(it.nome)}" title="Guardar">
+                  <div class="flex flex-col items-end gap-1">
+                    <div class="relative">
+                      <input type="text" inputmode="numeric" autocomplete="off" value="${preco}" data-preco class="tnum w-28 rounded-lg border border-outline-variant/50 bg-surface-lowest px-3 py-2 pr-9 font-sans text-right text-price-display text-on-surface outline-none focus:border-gold-600" />
+                      <span class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 font-sans text-label-caps-sm uppercase text-outline">Kz</span>
+                    </div>
+                    <span data-prev-help class="font-sans text-label-caps-sm text-on-surface-variant">= ${formatKz(preco)}</span>
+                  </div>
+                  <button type="button" data-save class="inline-flex h-10 w-10 items-center justify-center rounded-none bg-primary text-on-primary transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-60" aria-label="Guardar ${esc(it.nome)}" title="Guardar">
                     ${icon('check', 'text-[1.2rem]')}
                   </button>
                 </div>
@@ -208,30 +232,82 @@ function render() {
   wireRows();
 }
 
+function updatePrecoHelper(inp) {
+  const helper = inp.closest('[data-row]')?.querySelector('[data-prev-help]');
+  if (!helper) return;
+  const raw = inp.value.replace(/[.\s]/g, '');
+  const n = Number(raw);
+  if (Number.isFinite(n) && n > 0) {
+    helper.textContent = `= ${formatKz(Math.round(n))}`;
+  } else {
+    helper.textContent = 'Preço inválido.';
+  }
+}
+
+function normalizePreco(inp) {
+  const raw = String(inp.value).replace(/[.\s]/g, '');
+  const n = Number(raw);
+  if (Number.isFinite(n) && n >= 0) inp.value = String(Math.round(n));
+  updatePrecoHelper(inp);
+}
+
 function wireRows() {
   document.querySelectorAll('[data-save]').forEach((btn) =>
-    btn.addEventListener('click', () => guardar($(btn.closest('[data-row]'))))
+    btn.addEventListener('click', () => guardar(btn.closest('[data-row]')))
   );
+  document.querySelectorAll('[data-preco]').forEach((inp) => {
+    inp.addEventListener('input', () => {
+      updatePrecoHelper(inp);
+      markDirty(inp.closest('[data-row]'));
+    });
+    inp.addEventListener('blur', () => normalizePreco(inp));
+  });
+  document.querySelectorAll('[data-avail]').forEach((chk) => {
+    chk.addEventListener('change', () => {
+      const row = chk.closest('[data-row]');
+      const off = !chk.checked;
+      chk.setAttribute('aria-checked', String(!off));
+      chk.setAttribute('aria-label', off ? 'Esgotado' : 'Disponível');
+      const label = row.querySelector('label');
+      if (label) label.title = off ? 'Esgotado' : 'Disponível';
+      const txt = row.querySelector('[data-avail-text]');
+      if (txt) txt.textContent = off ? 'Esgotado' : 'Disponível';
+      markDirty(row);
+    });
+  });
 }
 
 async function guardar(row) {
   const chave = row.getAttribute('data-chave');
   const input = row.querySelector('[data-preco]');
-  const preco = Number(input.value);
+  const raw = String(input.value).replace(/[.\s]/g, '');
+  const preco = Number(raw);
   const disponivel = row.querySelector('[data-avail]').checked;
+  const saveBtn = row.querySelector('[data-save]');
 
-  if (!preco || preco < 0 || !Number.isFinite(preco)) {
-    toast('Preço inválido.', 'err');
+  if (!Number.isFinite(preco) || preco <= 0) {
+    toast('Preço inválido. Usa só números (ex.: 3500 ou 3.500).', 'err');
     input.focus();
     return;
   }
 
+  const base = Number(row.getAttribute('data-base') || 0);
+  if (base > 0 && Math.abs(preco - base) / base > 0.5) {
+    if (!window.confirm(`O preço muda mais de 50% face ao valor base (${formatKz(base)}). Guardar mesmo assim?`)) {
+      input.focus();
+      return;
+    }
+  }
+
+  if (saveBtn) saveBtn.disabled = true;
   const res = await savePrice(chave, preco, disponivel);
   if (res.ok) {
-    toast(`${row.getAttribute('data-name')} → ${formatKz(preco)} guardado`);
+    dirty.delete(chave);
+    toast(disponivel ? `${row.getAttribute('data-name')} → ${formatKz(preco)}` : `${row.getAttribute('data-name')} → Esgotado`);
     await loadData();
     return;
   }
+  if (saveBtn) saveBtn.disabled = false;
   toast(saveErrorMsg(res), 'err');
   if (res.error === 'not-authenticated' || res.error === 'acesso-nao-admin') await logoutToLogin();
 }
@@ -274,10 +350,13 @@ function renderOrdem() {
     return;
   }
   el.innerHTML = `
-    <div class="card overflow-hidden">
-      <div class="border-b border-outline-variant/40 px-5 py-4">
-        <h2 class="font-sans text-headline-sm uppercase tracking-wide text-on-surface">Ordem das Seções</h2>
-        <p class="mt-0.5 font-sans text-body-sm text-on-surface-variant">Define a ordem das abas no menu — podes intercalar Refeições e Bebidas.</p>
+    <details class="group rounded-xl border border-outline-variant/40 bg-surface-lowest shadow-card" ${state.ordemAberto ? 'open' : ''} data-ordem-details>
+      <summary class="flex cursor-pointer select-none items-center justify-between gap-3 rounded-xl px-5 py-4 font-sans text-headline-sm uppercase tracking-wide text-on-surface">
+        <span>Ordem das Seções</span>
+        ${icon('arrowDown', 'text-[1.1rem] text-on-surface-variant transition-transform group-open:rotate-180')}
+      </summary>
+      <div class="px-5 pb-1 pt-0.5">
+        <p class="font-sans text-body-sm text-on-surface-variant">Define a ordem das categorias no menu — podes intercalar Refeições e Bebidas.</p>
       </div>
       <ol class="divide-y divide-outline-variant/15">
         ${cats
@@ -286,7 +365,7 @@ function renderOrdem() {
           <li class="flex items-center gap-3 px-5 py-2.5">
             <span class="tnum w-6 shrink-0 text-right font-sans text-label-caps-sm text-outline">${i + 1}</span>
             <span class="min-w-0 flex-1 truncate font-sans font-semibold text-on-surface">${esc(c.nome)}</span>
-            <span class="hidden shrink-0 px-2 py-0.5 font-sans text-label-caps-sm uppercase sm:inline-block ${c.menuId === 'refeicoes' ? 'bg-surface-high text-on-surface-variant' : 'bg-gold-100 text-gold-600'}">${c.menuId === 'refeicoes' ? 'Refeições' : 'Bebidas'}</span>
+            <span class="hidden shrink-0 px-2 py-0.5 font-sans text-label-caps-sm uppercase sm:inline-block ${c.menuId === 'refeicoes' ? 'bg-surface-high text-on-surface-variant' : 'bg-gold-100 text-primary'}">${c.menuId === 'refeicoes' ? 'Refeições' : 'Bebidas'}</span>
             <div class="flex shrink-0 items-center gap-1">
               ${ordemArrowBtn('up', i, cats.length)}
               ${ordemArrowBtn('down', i, cats.length)}
@@ -295,7 +374,13 @@ function renderOrdem() {
           )
           .join('')}
       </ol>
-    </div>`;
+    </details>`;
+  const details = el.querySelector('[data-ordem-details]');
+  if (details) {
+    details.addEventListener('toggle', () => {
+      state.ordemAberto = details.open;
+    });
+  }
   document.querySelectorAll('[data-order-move]').forEach((btn) =>
     btn.addEventListener('click', () =>
       moverSecao(Number(btn.getAttribute('data-idx')), btn.getAttribute('data-dir'))
@@ -329,12 +414,21 @@ function renderTabs() {
     btn.className = `rounded-none py-2.5 font-sans text-label-caps uppercase transition-all ${
       active ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:text-on-surface'
     }`;
+    btn.setAttribute('aria-selected', String(active));
+    btn.setAttribute('tabindex', active ? '0' : '-1');
   });
+  const panel = $('#admin-lista');
+  if (panel) panel.setAttribute('aria-labelledby', state.tab === 'bebidas' ? 'atab-bebidas' : 'atab-refeicoes');
 }
 
 function initControls() {
-  document.querySelectorAll('[data-atab]').forEach((btn) =>
+  const tablist = document.querySelector('[role="tablist"]');
+  const tabs = [...(tablist?.querySelectorAll('[data-atab]') || [])];
+
+  tabs.forEach((btn) =>
     btn.addEventListener('click', () => {
+      if (!confirmDiscard()) return;
+      dirty.clear();
       state.tab = btn.getAttribute('data-atab');
       state.busca = '';
       $('#admin-busca').value = '';
@@ -343,6 +437,22 @@ function initControls() {
       render();
     })
   );
+
+  tablist?.addEventListener('keydown', (e) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+    const idx = tabs.findIndex((b) => b.getAttribute('data-atab') === state.tab);
+    if (idx === -1) return;
+    let n = idx;
+    if (e.key === 'ArrowRight') n = (idx + 1) % tabs.length;
+    else if (e.key === 'ArrowLeft') n = (idx - 1 + tabs.length) % tabs.length;
+    else if (e.key === 'Home') n = 0;
+    else if (e.key === 'End') n = tabs.length - 1;
+    e.preventDefault();
+    state.tab = tabs[n].getAttribute('data-atab');
+    renderTabs();
+    render();
+    tabs[n].focus();
+  });
 
   $('#admin-busca').addEventListener('input', (e) => {
     state.busca = e.target.value;
@@ -357,8 +467,22 @@ function initControls() {
     render();
   });
 
-  $('#btn-refresh').addEventListener('click', loadData);
-  $('#btn-sair').addEventListener('click', logoutToLogin);
+  $('#btn-refresh').addEventListener('click', () => {
+    if (!confirmDiscard()) return;
+    dirty.clear();
+    loadData();
+  });
+  $('#btn-sair').addEventListener('click', () => {
+    if (!confirmDiscard()) return;
+    dirty.clear();
+    logoutToLogin();
+  });
+
+  window.addEventListener('beforeunload', (e) => {
+    if (!dirty.size) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
 }
 
 // ---------------- boot

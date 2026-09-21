@@ -31,7 +31,7 @@
             <span data-theme-sun class="hidden"><span data-icon="sun" class="inline-block text-[1.05rem]"></span></span>
           </button>
           <a href="%BASE_URL%" class="inline-flex items-center gap-1.5 rounded-none border border-outline-variant/50 px-3.5 py-2 font-sans text-label-caps-sm uppercase text-on-surface transition-colors hover:border-gold-500 hover:text-primary">
-            <span data-icon="logout" class="text-[1rem]"></span>Site
+            <span data-icon="external" class="text-[1rem]"></span>Site
           </a>
         </div>
       </div>
@@ -84,9 +84,10 @@
             <p class="font-script text-2xl italic text-tertiary">Os preços da Vó</p>
             <h1 class="font-sans text-headline-lg uppercase text-on-surface">Editar Menu</h1>
           </div>
-          <div class="flex items-center gap-2">
-            <button type="button" id="btn-refresh" class="inline-flex items-center gap-1.5 rounded-none border border-outline-variant/50 px-3.5 py-2 font-sans text-label-caps-sm uppercase text-on-surface transition-colors hover:border-gold-500 hover:text-primary">
-              <span data-icon="refresh" class="text-[1rem]"></span><span data-status-label>Recarregar</span>
+          <div class="flex flex-wrap items-center justify-end gap-2 text-right">
+            <p data-status-label role="status" class="min-w-0 font-sans text-body-sm text-on-surface-variant"></p>
+            <button type="button" id="btn-refresh" aria-label="Recarregar preços" class="inline-flex items-center gap-1.5 rounded-none border border-outline-variant/50 px-3.5 py-2 font-sans text-label-caps-sm uppercase text-on-surface transition-colors hover:border-gold-500 hover:text-primary">
+              <span data-icon="refresh" class="text-[1rem]"></span>Recarregar
             </button>
             <button type="button" id="btn-sair" class="inline-flex items-center gap-1.5 rounded-none border border-outline-variant/50 px-3.5 py-2 font-sans text-label-caps-sm uppercase text-on-surface transition-colors hover:border-gold-500 hover:text-primary">
               <span data-icon="logout" class="text-[1rem]"></span>Sair
@@ -95,10 +96,10 @@
         </div>
 
         <div class="grid grid-cols-2 gap-2 rounded-xl bg-surface-high p-1 sm:max-w-md" role="tablist" aria-label="Seções do menu">
-          <button type="button" role="tab" class="rounded-none py-2.5 font-sans text-label-caps uppercase transition-all" data-atab="refeicoes">
+          <button type="button" role="tab" id="atab-refeicoes" class="rounded-none py-2.5 font-sans text-label-caps uppercase transition-all" data-atab="refeicoes">
             <span class="inline-flex items-center justify-center gap-2 w-full"><span data-icon="utensils" class="text-[1.1rem]"></span>Refeições</span>
           </button>
-          <button type="button" role="tab" class="rounded-none py-2.5 font-sans text-label-caps uppercase transition-all" data-atab="bebidas">
+          <button type="button" role="tab" id="atab-bebidas" class="rounded-none py-2.5 font-sans text-label-caps uppercase transition-all" data-atab="bebidas">
             <span class="inline-flex items-center justify-center gap-2 w-full"><span data-icon="bar" class="text-[1.1rem]"></span>Bebidas</span>
           </button>
         </div>
@@ -108,17 +109,18 @@
           <input
             id="admin-busca"
             type="text"
+            aria-label="Filtrar itens"
             placeholder="Filtrar itens…"
             class="w-full rounded-xl border border-outline-variant/50 bg-surface-lowest py-2.5 pl-11 pr-9 font-sans text-body-md text-on-surface outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/30"
           />
-          <button type="button" id="admin-limpar" class="absolute right-2.5 top-1/2 hidden -translate-y-1/2 rounded-none p-1.5 text-on-surface-variant hover:bg-surface-high">
+          <button type="button" id="admin-limpar" aria-label="Limpar filtro" class="absolute right-2.5 top-1/2 hidden -translate-y-1/2 rounded-none p-1.5 text-on-surface-variant hover:bg-surface-high">
             <span data-icon="close" class="text-[1rem]"></span>
           </button>
         </div>
 
         <div id="ordem-seccoes" class="mt-6"></div>
 
-        <div id="admin-lista" data-admin-lista class="mt-6 scroll-mt-24"></div>
+        <div id="admin-lista" data-admin-lista role="tabpanel" class="mt-6 scroll-mt-24"></div>
       </section>
     </main>
 

@@ -10,6 +10,10 @@ const dict = {
     cta_menu: 'Ver Menu',
     sec_menu: 'Menu',
     menu_sub: 'A nossa ementa',
+    menu_refeicoes: 'Refeições',
+    menu_bebidas: 'Bebidas',
+    voinha_close: 'Sinta-se em casa — à mesa ou no escorrega.',
+    voinha_play: 'Esplanada familiar · playground à beira-mar',
     badge_esgotado: 'Esgotado',
     count_opcoes: 'opções',
     menu_footer_note:
@@ -23,6 +27,13 @@ const dict = {
     foot_rights: '© 2026 Sítio da Voinha. Todos os direitos reservados.',
     foot_admin: 'Área reservada',
     foot_cred: 'Desenvolvido por',
+    lang_pt: 'Português',
+    lang_en: 'Inglês',
+    nav_open: 'Abrir menu',
+    nav_close: 'Fechar menu',
+    a11y_lang: 'Idioma',
+    a11y_menu_sections: 'Seções do menu',
+    a11y_categorias: 'Categorias do menu',
   },
   en: {
     nav_menu: 'Menu',
@@ -35,6 +46,10 @@ const dict = {
     cta_menu: 'See the Menu',
     sec_menu: 'Menu',
     menu_sub: 'Our menu',
+    menu_refeicoes: 'Food',
+    menu_bebidas: 'Drinks',
+    voinha_close: 'Make yourself at home — at the table or on the slide.',
+    voinha_play: 'Family-friendly terrace · playground by the sea',
     badge_esgotado: 'Sold out',
     count_opcoes: 'options',
     menu_footer_note:
@@ -48,6 +63,13 @@ const dict = {
     foot_rights: '© 2026 Sítio da Voinha. All rights reserved.',
     foot_admin: 'Reserved area',
     foot_cred: 'Developed by',
+    lang_pt: 'Portuguese',
+    lang_en: 'English',
+    nav_open: 'Open menu',
+    nav_close: 'Close menu',
+    a11y_lang: 'Language',
+    a11y_menu_sections: 'Menu sections',
+    a11y_categorias: 'Menu categories',
   },
 };
 
@@ -77,6 +99,7 @@ export function setLang(next) {
     btn.classList.toggle('text-on-primary', isActive);
     btn.classList.toggle('text-on-surface-variant', !isActive);
     btn.classList.toggle('hover:text-on-surface', !isActive);
+    btn.setAttribute('aria-pressed', String(isActive));
   });
   window.dispatchEvent(new CustomEvent('sdv:lang', { detail: { lang } }));
 }

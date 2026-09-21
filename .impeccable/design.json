@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-21T12:00:00.000Z",
+  "title": "Design System: Sítio da Voinha — Restaurante & Playground",
+  "extensions": {
+    "colorMeta": {
+      "gold": {
+        "role": "primary",
+        "displayName": "Ouro de Estuário",
+        "canonical": "rgb(117 91 0)",
+        "tonalRamp": ["rgb(36 28 0)", "rgb(58 45 0)", "rgb(80 62 0)", "rgb(101 79 0)", "rgb(123 97 8)", "rgb(152 123 25)", "rgb(188 157 47)", "rgb(243 235 208)"]
+      },
+      "gold-on": {
+        "role": "primary-on",
+        "displayName": "On Ouro de Estuário",
+        "canonical": "rgb(255 255 255)",
+        "tonalRamp": ["rgb(120 112 90)", "rgb(160 152 132)", "rgb(196 189 172)", "rgb(228 222 210)", "rgb(245 241 233)", "rgb(252 250 246)", "rgb(255 255 255)", "rgb(255 255 255)"]
+      },
+      "gold-container": {
+        "role": "primary-container",
+        "displayName": "Ouro de Estuário — Container",
+        "canonical": "rgb(178 145 47)",
+        "tonalRamp": ["rgb(48 39 0)", "rgb(80 64 0)", "rgb(112 89 5)", "rgb(145 117 23)", "rgb(178 145 47)", "rgb(205 177 86)", "rgb(232 205 126)", "rgb(255 240 196)"]
+      },
+      "gold-100": {
+        "role": "tertiary-container",
+        "displayName": "Ouro Lavado",
+        "canonical": "rgb(243 235 208)",
+        "tonalRamp": ["rgb(60 54 18)", "rgb(94 86 46)", "rgb(128 119 74)", "rgb(164 154 103)", "rgb(200 190 140)", "rgb(221 212 172)", "rgb(243 235 208)", "rgb(255 252 240)"]
+      },
+      "gold-500": {
+        "role": "primary-dim",
+        "displayName": "Ouro Sombreado",
+        "canonical": "rgb(178 145 47)",
+        "tonalRamp": ["rgb(45 36 0)", "rgb(76 61 0)", "rgb(108 87 4)", "rgb(142 116 24)", "rgb(178 145 47)", "rgb(205 180 91)", "rgb(232 213 137)", "rgb(255 246 200)"]
+      },
+      "gold-600": {
+        "role": "primary-fixed-dim",
+        "displayName": "Ouro Profundo",
+        "canonical": "rgb(143 114 34)",
+        "tonalRamp": ["rgb(36 28 0)", "rgb(57 45 0)", "rgb(79 63 0)", "rgb(102 82 8)", "rgb(126 105 35)", "rgb(162 138 61)", "rgb(198 174 91)", "rgb(255 224 143)"]
+      },
+      "honey": {
+        "role": "secondary-container",
+        "displayName": "Mel",
+        "canonical": "rgb(254 217 126)",
+        "tonalRamp": ["rgb(58 46 0)", "rgb(94 73 0)", "rgb(130 102 5)", "rgb(168 134 30)", "rgb(206 174 64)", "rgb(230 196 96)", "rgb(254 217 126)", "rgb(255 242 198)"]
+      },
+      "wood": {
+        "role": "tertiary",
+        "displayName": "Madeira de Barco",
+        "canonical": "rgb(130 83 53)",
+        "tonalRamp": ["rgb(44 22 4)", "rgb(74 42 18)", "rgb(103 62 34)", "rgb(130 83 53)", "rgb(159 111 79)", "rgb(191 143 110)", "rgb(224 177 144)", "rgb(255 236 216)"]
+      },
+      "surface": {
+        "role": "neutral-bg",
+        "displayName": "Areia",
+        "canonical": "rgb(249 249 247)",
+        "tonalRamp": ["rgb(38 38 36)", "rgb(70 70 67)", "rgb(104 104 100)", "rgb(139 139 134)", "rgb(176 176 171)", "rgb(207 207 203)", "rgb(233 233 231)", "rgb(249 249 247)"]
+      },
+      "surface-lowest": {
+        "role": "neutral-surface",
+        "displayName": "Branco Areia",
+        "canonical": "rgb(255 255 255)",
+        "tonalRamp": ["rgb(44 43 38)", "rgb(90 88 80)", "rgb(136 133 122)", "rgb(182 178 164)", "rgb(213 210 199)", "rgb(235 232 224)", "rgb(248 246 240)", "rgb(255 255 255)"]
+      }
+    },
+    "typographyMeta": {
+      "script": { "displayName": "Voz da Vó", "purpose": "Saudações em Playfair itálico — uma por ecrã." },
+      "headline": { "displayName": "Headline", "purpose": "Títulos de secção ('Menu', 'Editar Menu')." },
+      "price": { "displayName": "Preço", "purpose": "Valores em Kz — tnum, dourado, à direita." },
+      "label": { "displayName": "Label Caps", "purpose": "Botões, abas, navegação." }
+    },
+    "shadows": [
+      { "name": "soft", "value": "0 1px 2px rgba(17,17,17,0.03)", "purpose": "Elevação mínima." },
+      { "name": "card", "value": "0 1px 2px rgba(17,17,17,0.04), 0 8px 24px rgba(143,114,34,0.07)", "purpose": "Cartas em repouso." },
+      { "name": "card-hover", "value": "0 2px 4px rgba(17,17,17,0.05), 0 18px 40px rgba(143,114,34,0.14)", "purpose": "Cartas com intenção." },
+      { "name": "float", "value": "0 8px 24px rgba(143,114,34,0.14)", "purpose": "Botões primários." },
+      { "name": "float-strong", "value": "0 12px 32px rgba(143,114,34,0.24)", "purpose": "Toasts e elevação pontual." }
+    ],
+    "motion": [
+      { "name": "ease-state", "value": "transition-all duration-150", "purpose": "Estados de controlo (hover/active)." },
+      { "name": "active-squish", "value": "active:scale-[0.98]", "purpose": "Feedback tátil de clique." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "CTA principal da landing e do admin — reto, dourado, caps.",
+      "html": "<button class=\"ds-btn-primary\"><svg class=\"ds-ic\" viewBox=\"0 0 24 24\" aria-hidden=\"true\" fill=\"currentColor\"><path d=\"M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z\"/></svg>LIGAR</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:20px 24px;border:none;border-radius:0;background:rgb(117 91 0);color:#fff;font-family:Montserrat,ui-sans-serif,system-ui,sans-serif;font-size:0.6875rem;font-weight:700;line-height:1.3;letter-spacing:0.14em;text-transform:uppercase;box-shadow:0 8px 24px rgba(143,114,34,0.14);transition:all .15s;cursor:pointer}.ds-btn-primary .ds-ic{width:1em;height:1em}.ds-btn-primary:hover{background:rgb(178 145 47);color:rgb(58 44 0)}.ds-btn-primary:focus-visible{outline:2px solid rgb(143 114 34);outline-offset:2px}.ds-btn-primary:active{transform:scale(0.98)}"
+    },
+    {
+      "name": "Chip Tab (idle)",
+      "kind": "chip",
+      "refersTo": "chip-idle",
+      "description": "Aba de categoria do menu — reta, com borda suave.",
+      "html": "<button type=\"button\" role=\"tab\" class=\"ds-chip-idle\">ENTRADAS</button>",
+      "css": ".ds-chip-idle{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid rgb(127 118 101 / 0.4);border-radius:0;background:rgb(255 255 255);color:rgb(77 70 55);font-family:Montserrat,ui-sans-serif,system-ui,sans-serif;font-size:0.6875rem;font-weight:700;line-height:1.3;letter-spacing:0.14em;text-transform:uppercase;transition:color .15s,border-color .15s;cursor:pointer}.ds-chip-idle:hover{border-color:rgb(178 145 47 / 0.6);color:rgb(26 28 27)}.ds-chip-idle:focus-visible{outline:2px solid rgb(143 114 34);outline-offset:2px}"
+    },
+    {
+      "name": "Chip Tab (active)",
+      "kind": "chip",
+      "refersTo": "chip-active",
+      "description": "Aba selecionada — ouro lavado (texto primary para contraste AA na light), indicação clara de estado.",
+      "html": "<button type=\"button\" role=\"tab\" aria-selected=\"true\" aria-controls=\"panel-carta\" id=\"tab-entradas\" class=\"ds-chip-active\">ENTRADAS</button>",
+      "css": ".ds-chip-active{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid rgb(178 145 47 / 0.6);border-radius:0;background:rgb(243 235 208);color:rgb(117 91 0);font-family:Montserrat,ui-sans-serif,system-ui,sans-serif;font-size:0.6875rem;font-weight:700;line-height:1.3;letter-spacing:0.14em;text-transform:uppercase;transition:all .15s;cursor:pointer}.ds-chip-active:focus-visible{outline:2px solid rgb(143 114 34);outline-offset:2px}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "Campo do admin — afavel, com foco dourado.",
+      "html": "<input type=\"email\" class=\"ds-input\" placeholder=\"nome@email.com\" aria-label=\"Email\">",
+      "css": ".ds-input{width:100%;padding:12px 16px;border:1px solid rgb(208 197 177 / 0.5);border-radius:0.625rem;background:rgb(255 255 255);color:rgb(26 28 27);font-family:Montserrat,ui-sans-serif,system-ui,sans-serif;font-size:1rem;line-height:1.65;outline:none;transition:border-color .15s,box-shadow .15s}.ds-input::placeholder{color:rgb(127 118 101)}.ds-input:focus{border-color:rgb(143 114 34);box-shadow:0 0 0 2px rgb(143 114 34 / 0.3)}"
+    },
+    {
+      "name": "Card Container",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Receptáculo básico — branco areia, canto afavel.",
+      "html": "<div class=\"ds-card\"><p class=\"ds-title\">Ordem das Seções</p><p class=\"ds-note\">Define o ordenamento das abas no menu.</p></div>",
+      "css": ".ds-card{background:rgb(255 255 255);border-radius:0.625rem;box-shadow:0 1px 2px rgba(17,17,17,0.04),0 8px 24px rgba(143,114,34,0.07);padding:20px}.ds-title{font-family:Montserrat,ui-sans-serif,system-ui,sans-serif;font-size:1.125rem;font-weight:600;line-height:1.35;letter-spacing:0.03em;text-transform:uppercase;color:rgb(26 28 27);margin:0}.ds-note{margin-top:2px;font-family:Montserrat,ui-sans-serif,system-ui,sans-serif;font-size:0.75rem;line-height:1.5;color:rgb(77 70 55)}"
+    },
+    {
+      "name": "Menu Item Row (Carta)",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "A assinatura do sistema: nome + líder pontilhado + preço dourado.",
+      "html": "<ul class=\"ds-card-list\"><li class=\"ds-item\"><h3 class=\"ds-name\">Pica-pau</h3><span class=\"ds-leader\" aria-hidden=\"true\"></span><span class=\"ds-price\">6.500 Kz</span></li><li class=\"ds-item\"><h3 class=\"ds-name\">Gambas ao Alho</h3><span class=\"ds-leader\" aria-hidden=\"true\"></span><span class=\"ds-price\">13.000 Kz</span></li></ul>",
+      "css": ".ds-card-list{list-style:none;margin:0;padding:0;border-top:1px solid rgb(208 197 177 / 0.15);border-bottom:1px solid rgb(208 197 177 / 0.15)}.ds-item{display:flex;align-items:flex-end;gap:12px;padding:12px 0}.ds-name{min-width:0;margin:0;font-family:Montserrat,ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:0.875rem;color:rgb(26 28 27)}.ds-leader{flex:1;min-width:8px;margin-bottom:4px;border-bottom:1px dotted rgb(208 197 177 / 0.6)}.ds-price{flex-shrink:0;white-space:nowrap;font-family:Montserrat,ui-sans-serif,system-ui,sans-serif;font-size:1.25rem;font-weight:700;line-height:1.2;color:rgb(117 91 0);font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Toggle Switch (admin)",
+      "kind": "input",
+      "refersTo": "toggle-track",
+      "description": "Disponibilidade do item — track redondo, knob branco.",
+      "html": "<label class=\"ds-switch\" title=\"Disponível\"><input type=\"checkbox\" checked><span class=\"ds-track\"><span class=\"ds-knob\"></span></span></label>",
+      "css": ".ds-switch{display:inline-flex;cursor:pointer}.ds-switch input{position:absolute;opacity:0;width:1px;height:1px}.ds-track{position:relative;display:inline-block;width:44px;height:24px;border-radius:9999px;background:rgb(226 227 225);transition:background .15s}.ds-knob{position:absolute;left:2px;top:2px;width:20px;height:20px;border-radius:9999px;background:#fff;box-shadow:0 1px 2px rgba(17,17,17,0.25);transition:transform .15s}.ds-switch input:checked+.ds-track{background:rgb(117 91 0)}.ds-switch input:checked+.ds-track .ds-knob{transform:translateX(20px)}.ds-switch input:focus-visible+.ds-track{outline:2px solid rgb(143 114 34);outline-offset:2px}"
+    },
+    {
+      "name": "Toast (success)",
+      "kind": "custom",
+      "refersTo": "button-primary",
+      "description": "Feedback do admin — pill escura de tinta, sempre no canto inferior.",
+      "html": "<div class=\"ds-toast\" role=\"status\"><svg class=\"ds-ic\" viewBox=\"0 0 24 24\" aria-hidden=\"true\" fill=\"currentColor\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/></svg><span>Pica-pau → 6.500 Kz guardado</span></div>",
+      "css": ".ds-toast{display:flex;align-items:center;gap:8px;padding:12px 20px;border-radius:9999px;font-family:Montserrat,ui-sans-serif,system-ui,sans-serif;font-size:0.875rem;line-height:1.6;background:rgb(17 17 17);color:rgb(241 241 239);box-shadow:0 12px 32px rgba(143,114,34,0.24)}.ds-toast .ds-ic{width:1.1em;height:1.1em}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Ouro da Praia Morena",
+    "overview": "O Sítio da Voinha é uma esplanada costeira casual com playground, à beira-mar na Praia Morena, Benguela. O sistema visual pega no ouro areento do estuário — o mesmo tom que aparece no verniz da madeira e na palha dos guarda-sóis — e arruma-o com a precisão de uma carta clássica de restaurante: listas abertas, linhas pontilhadas a fechar o preço, maiúsculas largas de menu, um toque de caligrafia quando a 'Vó' fala. É costeiro porque respira areia e creme; é clássico porque nenhum botão é redondo e cada preço tem o seu lugar à direita. O sistema fala com tom descontraído e hierarquia firme. A densidade é baixa: muito ar, listas que se leem em linha reta, um dourado que aparece só onde esse dourado ganha significado — nos preços, nos CTAs e no item ativo. Tudo vive em tokens RGB invertíveis: o mesmo token muda de sentido entre claro e escuro.",
+    "keyCharacteristics": [
+      "Dourado areento de estuário como cor de autoridade (preços, CTAs, estado ativo).",
+      "Superfícies creme/areia com texto quente-escuro; escuro = quase-preto quente com dourado-claro.",
+      "Botões e chips perfeitamente retangulares; inputs e cartas afáveis; pills só para badges e toggles.",
+      "Listas abertas à moda da carta clássica — nunca cartões fechados no menu público.",
+      "Montserrat caps com tracking largo para estrutura; Playfair italics para o registo da Vó.",
+      "Elevação flat com brilho quente: sombras cor de ouro no lugar certo.",
+      "Temas clar/escuro por inversão de tokens; dark automático por janela horária (17:30–05:00) com escolha manual."
+    ],
+    "rules": [
+      { "name": "The Dourado-Seletivo Rule", "body": "O dourado só brilha onde significa valor: preço, CTA primário, estado ativo, marca. Nunca como decoração gratuita em superfícies.", "section": "colors" },
+      { "name": "The Inversão Rule", "body": "Um token é uma família que muda com o tema — gold dark = rgb(232 195 92) (claro), nunca um dourado escuro sobre fundo escuro. Nunca escrever cores literais; sempre token.", "section": "colors" },
+      { "name": "The Toast Rule", "body": "Não há 'verde de sucesso': o admin usa tinta sobre superfície inversa (toast quase-preto) para sucesso, mel para avisos e vermelho-container para erros.", "section": "colors" },
+      { "name": "The Price Gold Rule", "body": "Todo o preço usa price + tnum + cor gold, alinhado à direita, com whitespace-nowrap. Esgotado → line-through + cor esmaecida, nunca outra cor.", "section": "typography" },
+      { "name": "The Script Scarcity Rule", "body": "A Playfair só fala uma vez; mais de uma saudação da Vó por página é excesso.", "section": "typography" },
+      { "name": "The Flat-by-Default Rule", "body": "Superfícies estão planas em repouso; a sombra aparece como resposta (cartas, toasts, foco de CTA) — nunca em toda a página.", "section": "elevation" },
+      { "name": "The Recto Rule", "body": "Nada de rounded-full/lg/xl em botões e chips — o recto faz a carta parecer impressa. Inputs mantêm o rounded-xl.", "section": "shapes" }
+    ],
+    "dos": [
+      "Usar tokens sempre; nunca hex/rgb literais.",
+      "Manter botões/chips rectos (rounded-none); inputs e cartas rounded-xl; pills só para badges/toggles.",
+      "Colocar o preço à direita com price + tnum + whitespace-nowrap + gold.",
+      "Usar o líder pontilhado (border-b border-dotted) para fechar nome→preço na carta.",
+      "Reflectir o tema via inversão de tokens.",
+      "Preservar estados: hover/focus/active nos botões, aria-selected nas abas, esgotado com riscado+badge.",
+      "Gravar a escolha de tema em sdv-theme e deixar a janela horária como default.",
+      "Adicionar nome_en/nota_en a cada item novo."
+    ],
+    "donts": [
+      "Usar ink/tokens invertíveis no véu da hero — só from-black/80 via-black/40 to-surface.",
+      "Voltar a colocar texto junto do logótipo nem usar logo-sm.png; o SVG logo-sdv já traz o nome, e no dark é 100% branco.",
+      "Usar o path antigo escrita-voinha-e-talheres no wordmark.",
+      "Envolver a lista pública de pratos em cartões fechados — carta aberta com divide-y.",
+      "Usar verde para sucesso.",
+      "Usar Playfair fora do registo de saudação da Vó."
+    ]
+  }
+}

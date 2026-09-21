@@ -57,9 +57,9 @@
         </nav>
 
         <div class="flex items-center gap-2">
-          <div class="flex items-center rounded-none border border-outline-variant/50 bg-surface-lowest p-0.5" role="group" aria-label="Idioma">
-            <button type="button" data-lang-btn="pt" class="rounded-none px-2.5 py-1 font-sans text-label-caps-sm uppercase text-on-surface-variant transition-colors hover:text-on-surface">PT</button>
-            <button type="button" data-lang-btn="en" class="rounded-none px-2.5 py-1 font-sans text-label-caps-sm uppercase text-on-surface-variant transition-colors hover:text-on-surface">EN</button>
+          <div class="flex items-center rounded-none border border-outline-variant/50 bg-surface-lowest p-0.5" role="group" aria-label="Idioma" data-i18n-aria="a11y_lang">
+            <button type="button" data-lang-btn="pt" aria-pressed="true" class="rounded-none px-2.5 py-1 font-sans text-label-caps-sm uppercase text-on-surface-variant transition-colors hover:text-on-surface" data-i18n-aria="lang_pt">PT</button>
+            <button type="button" data-lang-btn="en" aria-pressed="false" class="rounded-none px-2.5 py-1 font-sans text-label-caps-sm uppercase text-on-surface-variant transition-colors hover:text-on-surface" data-i18n-aria="lang_en">EN</button>
           </div>
           <button
             type="button"
@@ -136,20 +136,30 @@
       <!-- ============ MENU ============ -->
       <section id="menu" class="section mx-auto max-w-page px-4 pb-16 pt-10 sm:px-6 md:px-8">
         <div class="mb-8 text-center">
-          <p class="font-script text-script-accent italic text-tertiary" data-i18n="menu_sub">A nossa ementa</p>
+          <p class="font-sans text-label-caps uppercase tracking-[0.25em] text-tertiary" data-i18n="menu_sub">A nossa ementa</p>
           <h2 class="mt-1 font-sans text-headline-lg uppercase text-on-surface" data-i18n="sec_menu">Menu</h2>
           <span class="mx-auto mt-4 block h-px w-24 bg-gold-500/60"></span>
         </div>
 
-        <!-- Barra de abas (uma por categoria) -->
+        <!-- Barra de menus e abas por categoria -->
         <div class="sticky top-16 z-40 -mx-4 border-b border-outline-variant/40 bg-surface/90 px-4 py-3 backdrop-blur-md md:top-20 md:-mx-8 md:px-8" data-menu-chrome>
           <div class="mx-auto max-w-3xl">
-            <div id="tabs" class="no-scrollbar flex items-center gap-2 overflow-x-auto pb-0.5" role="tablist" aria-label="Categorias do menu" data-tabs></div>
+            <div class="mb-2 flex justify-center gap-2 sm:justify-start" role="group" aria-label="Seções do menu" data-i18n-aria="a11y_menu_sections">
+              <button type="button" data-menu-btn="refeicoes" class="chip" aria-pressed="false"></button>
+              <button type="button" data-menu-btn="bebidas" class="chip" aria-pressed="false"></button>
+            </div>
+            <div id="tabs" class="no-scrollbar flex items-center gap-2 overflow-x-auto pb-0.5" role="tablist" aria-label="Categorias do menu" data-i18n-aria="a11y_categorias" data-tabs></div>
           </div>
         </div>
 
         <!-- Lista da categoria ativa -->
-        <div id="lista-categoria" class="mx-auto mt-8 max-w-3xl" data-lista></div>
+        <div id="lista-categoria" class="mx-auto mt-8 max-w-3xl scroll-mt-40 md:scroll-mt-44" data-lista></div>
+        <p id="lista-status" class="sr-only" role="status" aria-live="polite"></p>
+
+        <div class="mx-auto mt-14 max-w-3xl text-center">
+          <p class="font-script text-script-accent italic text-tertiary" data-i18n="voinha_close">Sinta-se em casa — à mesa ou no escorrega.</p>
+          <p class="mt-2 font-sans text-body-sm uppercase tracking-[0.18em] text-on-surface-variant" data-i18n="voinha_play">Esplanada familiar · playground à beira-mar</p>
+        </div>
       </section>
     </main>
 
@@ -166,7 +176,7 @@
           <div>
             <h3 class="font-sans text-headline-sm uppercase text-on-surface" data-i18n="loc_hours_label">Horário</h3>
             <p class="mt-1 font-sans text-body-sm text-on-surface-variant" data-i18n="loc_hours">Terça a Domingo · 10h00 – 22h00</p>
-            <p class="mt-0.5 font-sans text-body-sm text-outline" data-i18n="loc_closed">Segunda-feira: encerrado</p>
+            <p class="mt-0.5 font-sans text-body-sm text-on-surface-variant" data-i18n="loc_closed">Segunda-feira: encerrado</p>
           </div>
           <div>
             <h3 class="font-sans text-headline-sm uppercase text-on-surface" data-i18n="loc_phone_label">Contacto</h3>
@@ -178,17 +188,19 @@
         </div>
 
         <p class="font-sans text-body-sm text-on-surface-variant" data-i18n="foot_rights">© 2026 Sítio da Voinha. Todos os direitos reservados.</p>
-        <a href="%BASE_URL%admin.html" class="inline-flex items-center gap-1.5 font-sans text-label-caps-sm uppercase text-outline transition-colors hover:text-primary"><span data-icon="lock" class="text-[0.9rem]"></span><span data-i18n="foot_admin">Área reservada</span></a>
-        <p class="font-sans text-body-sm text-outline">
-          <span data-i18n="foot_cred">Desenvolvido por</span>&nbsp;
-          <a
-            href="https://docflex-site.vercel.app/"
-            target="_blank"
-            rel="noopener"
-            class="font-bold uppercase text-on-surface-variant transition-colors hover:text-primary"
-            >DOCFLEX ANGOLA</a
-          >
-        </p>
+        <div class="flex flex-col items-center gap-1">
+          <a href="%BASE_URL%admin.html" class="inline-flex items-center gap-1.5 font-sans text-label-caps-sm uppercase text-on-surface-variant transition-colors hover:text-primary"><span data-icon="lock" class="text-[0.9rem]"></span><span data-i18n="foot_admin">Área reservada</span></a>
+          <p class="font-sans text-body-sm text-on-surface-variant">
+            <span data-i18n="foot_cred">Desenvolvido por</span>&nbsp;
+            <a
+              href="https://docflex-site.vercel.app/"
+              target="_blank"
+              rel="noopener"
+              class="font-bold uppercase text-on-surface transition-colors hover:text-primary"
+              >DOCFLEX ANGOLA</a
+            >
+          </p>
+        </div>
       </div>
     </footer>
 

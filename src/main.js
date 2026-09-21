@@ -32,13 +32,22 @@ function initHeader() {
   openBtn?.addEventListener('click', () => {
     const open = nav.classList.toggle('hidden');
     openBtn.setAttribute('aria-expanded', String(!open));
+    openBtn.setAttribute('aria-label', t(open ? 'nav_close' : 'nav_open'));
   });
   nav?.querySelectorAll('a').forEach((a) =>
     a.addEventListener('click', () => {
       nav.classList.add('hidden');
       openBtn?.setAttribute('aria-expanded', 'false');
+      openBtn?.setAttribute('aria-label', t('nav_open'));
     })
   );
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || nav?.classList.contains('hidden')) return;
+    nav.classList.add('hidden');
+    openBtn?.setAttribute('aria-expanded', 'false');
+    openBtn?.setAttribute('aria-label', t('nav_open'));
+    openBtn?.focus();
+  });
 
   const onScroll = () => {
     if (window.scrollY > 8) {
@@ -58,6 +67,7 @@ const state = {
   overrides: [],
   ordemMap: new Map(),
   categorias: [],
+  menu: 'refeicoes',
   categoria: 'entradas',
 };
 
@@ -75,15 +85,27 @@ function activeCat() {
   );
 }
 
-function renderTabs(focusActive = false) {
+function renderTabs() {
   const active = activeCat();
-  tabsEl().innerHTML = state.categorias
+
+  document.querySelectorAll('[data-menu-btn]').forEach((btn) => {
+    const on = btn.getAttribute('data-menu-btn') === state.menu;
+    btn.className = `chip ${on ? 'chip-active' : 'chip-idle'}`;
+    btn.setAttribute('aria-pressed', String(on));
+    btn.textContent = t(btn.getAttribute('data-menu-btn') === 'refeicoes' ? 'menu_refeicoes' : 'menu_bebidas');
+  });
+
+  const visible = state.categorias.filter((c) => c.menuId === state.menu);
+  tabsEl().innerHTML = visible
     .map(
       (c) => `
       <button
         type="button"
         role="tab"
+        id="tab-${esc(c.catId)}"
         aria-selected="${c.catId === active.catId}"
+        aria-controls="lista-categoria"
+        tabindex="${c.catId === active.catId ? '0' : '-1'}"
         data-cat="${esc(c.catId)}"
         class="${c.catId === active.catId ? 'chip-active' : 'chip-idle'}"
       >${esc(lname(c))}</button>`
@@ -97,11 +119,6 @@ function renderTabs(focusActive = false) {
       renderList(true);
     })
   );
-
-  if (focusActive) {
-    const btn = tabsEl().querySelector('[data-cat="' + esc(active.catId) + '"]');
-    btn?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-  }
 }
 
 function renderList(scrollTop = false) {
@@ -128,7 +145,7 @@ function renderList(scrollTop = false) {
     <div class="mb-2 flex items-center gap-3">
       <h3 class="font-sans text-headline-sm uppercase tracking-wide text-on-surface">${esc(lname(cat))}</h3>
       <span class="h-px flex-1 bg-outline-variant/60"></span>
-      <span class="shrink-0 rounded-full bg-gold-100 px-2.5 py-0.5 font-sans text-label-caps-sm uppercase text-gold-600">${cat.itens.length} ${esc(t('count_opcoes'))}</span>
+      <span class="shrink-0 rounded-full bg-gold-100 px-2.5 py-0.5 font-sans text-label-caps-sm uppercase text-primary">${cat.itens.length} ${esc(t('count_opcoes'))}</span>
     </div>
     <ul class="divide-y divide-outline-variant/15">
       ${itemsHtml}
@@ -136,6 +153,10 @@ function renderList(scrollTop = false) {
     <p class="mt-10 border-t border-outline-variant/40 pt-6 text-center font-sans text-body-sm text-on-surface-variant">
       ${esc(t('menu_footer_note'))}
     </p>`;
+
+  listEl().setAttribute('aria-labelledby', `tab-${active.catId}`);
+  const statusEl = document.querySelector('#lista-status');
+  if (statusEl) statusEl.textContent = `${lname(cat)} — ${cat.itens.length} ${t('count_opcoes')}`;
 
   if (scrollTop) {
     listEl().previousElementSibling?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -149,6 +170,37 @@ function renderMenu() {
 
 function initMenu() {
   renderMenu();
+
+  document.querySelectorAll('[data-menu-btn]').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const m = btn.getAttribute('data-menu-btn');
+      if (m === state.menu) return;
+      state.menu = m;
+      const first = state.categorias.find((c) => c.menuId === m);
+      if (first) state.categoria = first.catId;
+      renderMenu();
+      listEl().previousElementSibling?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    })
+  );
+
+  tabsEl().addEventListener('keydown', (e) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+    const btns = [...tabsEl().querySelectorAll('[data-cat]')];
+    const idx = btns.findIndex((b) => b.getAttribute('data-cat') === state.categoria);
+    if (idx === -1) return;
+    let n = idx;
+    if (e.key === 'ArrowRight') n = (idx + 1) % btns.length;
+    else if (e.key === 'ArrowLeft') n = (idx - 1 + btns.length) % btns.length;
+    else if (e.key === 'Home') n = 0;
+    else if (e.key === 'End') n = btns.length - 1;
+    e.preventDefault();
+    state.categoria = btns[n].getAttribute('data-cat');
+    renderTabs();
+    renderList(true);
+    const active = tabsEl().querySelector(`[data-cat="${btns[n].getAttribute('data-cat')}"]`);
+    active?.focus();
+  });
+
   window.addEventListener('sdv:lang', () => renderMenu());
 }
 
@@ -170,7 +222,9 @@ async function loadData() {
     (ordem.data || []).filter((r) => r && r.cat_id != null && r.ordem != null).map((r) => [r.cat_id, r.ordem])
   );
   state.categorias = flatCategories(state.menus, state.ordemMap);
-  state.categoria = state.categorias[0]?.catId || 'entradas';
+  const first = state.categorias[0];
+  state.menu = first ? first.menuId : 'refeicoes';
+  state.categoria = first?.catId || 'entradas';
   renderMenu();
 }
 
