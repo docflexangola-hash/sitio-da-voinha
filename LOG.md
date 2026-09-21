@@ -14,6 +14,13 @@ Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada da
 - `index.html` coloca os PNG/ICO **antes** do `<link rel="icon" type="image/svg+xml">`, de modo que crawlers/dispositivos que não suportam SVG usam o PNG/ICO; browsers modernos continuam com o SVG.
 - Build verificado: PNG/ICO copiados para `dist/images/`; links com `%BASE_URL%` (funciona em Vercel raíz e GH Pages subpath).
 
+## 2026-09-21 — og:image = logotipo (preview WhatsApp)
+
+- O preview do WhatsApp agora mostra o **logotipo completo** em vez da foto do hero.
+- Gerado `public/images/og-1200x630.png` (1200×630, ~ proporção 1.91:1 do WhatsApp): **logotipo completo** sobre fundo **creme `#F4EFE4`**, sem transparência (canvas opaco), centrado. Gerado via `sharp` (script temporário `genog.cjs` apagado depois).
+- `index.html`: `og:image` → `%BASE_URL%images/og-1200x630.png?v=2` (cache-buster `?v=2` para forçar a re-raspagem do WhatsApp ao reenviar o link). Adicionadas `og:image:type/width/height`.
+- Build verificado nos 2 cenários (raiz Vercel + subpath GH Pages).
+
 ## 2026-09-20 — Vercel: sem ENV, base dinâmica
 
 - Confirmado: zero `import.meta.env`/`process.env`/`VITE_` no código; Supabase URL + anon hardcoded em `supabase/config.js` (públicas por design). **Nenhum ENV é necessário no Vercel** (nada de serverless).
