@@ -2,6 +2,14 @@
 
 Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada datada no topo (ou no fim, de forma consistente) a cada sessão**; registar decisões, mudanças de estado e pendências.
 
+## 2026-09-21 — Pipeline impeccable: document + critique + polish
+
+- **Document o sistema**: gerados `PRODUCT.md` (contexto), `DESIGN.md` (design system: tokens, tipografia, regras nomeadas) e `.impeccable/design.json` (source of truth estruturada) via `impeccable init/document`.
+- **Critique ×2** (`impeccable critique`, evidência por dual-agente + detector): landing `index.html` **28/36 Good** · admin `admin.html` **18/36 Needs Work**. Snapshots em `.impeccable/critique/` + `trend.md`.
+- **Polish** (distil-first, um único passe) — landing: **menu em dois estágios** (chips "Refeições"/"Bebidas" com `aria-pressed` + abas por categoria `role=tab`/`aria-selected`/roving, `aria-controls`→`#lista-categoria`), despedida da Vó (*script* accent único) acima do rodapé, contraste AA na light (`chip-active` → `text-primary` 5.4:1; rodapé → `text-on-surface-variant`), `#lista-status` sr-only live, toggle de tema com `aria-label` por idioma; admin: **guarda de edições não guardadas** (`dirty` Set + confirm em tab/refresh/Sair/`beforeunload`, `.row-dirty` visual, botão guardar com estado disabled), painel "Ordem das Seções" **colapsável** (`<details>` + chevron), switch com `role=switch`/`aria-checked` + rótulo Disponível/Esgotado + toast de estado real, input de preço com helper `= <formatado>` + normalização no blur + validação (>0, aviso de salto >50%), tabs com `aria-selected`/`aria-labelledby`, `#btn-refresh` com nome fixo + status em `<p role="status">`, ícone `external` no botão "Site".
+- **Verificação**: `npm run build` verde; detector sem regressões (mesmos falsos positivos pré-existentes); i18n 32/32 chaves espelhadas pt/en. AGENTS.md e DESIGN.md atualizados para refletir as mudanças (menu em 2 estágios, token chip-active, Estado atual 2026-09-21).
+- **Deploy**: commit `04af733` pushado → Vercel recarrega `https://sitio-da-voinha.vercel.app/`.
+
 ## 2026-09-21 — QR code do site
 
 - Gerado (offline, Node + `qrcode` + `sharp`): **preto sobre branco, logo dos talheres ao centro**, nível de correção **H**, **1024×1024** PNG + versão vector SVG (sem logo, impressão alta resolução).
