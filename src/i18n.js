@@ -34,6 +34,10 @@ const dict = {
     a11y_lang: 'Idioma',
     a11y_menu_sections: 'Seções do menu',
     a11y_categorias: 'Categorias do menu',
+    insta_eyebrow: 'Acompanhe-nos',
+    insta_title: 'O nosso Instagram',
+    insta_caption: 'Pratos, esplanada e momentos à beira-mar — no feed.',
+    insta_follow: 'Seguir',
   },
   en: {
     nav_menu: 'Menu',
@@ -70,6 +74,10 @@ const dict = {
     a11y_lang: 'Language',
     a11y_menu_sections: 'Menu sections',
     a11y_categorias: 'Menu categories',
+    insta_eyebrow: 'Follow us',
+    insta_title: 'Our Instagram',
+    insta_caption: 'Dishes, terrace and moments by the sea — on the feed.',
+    insta_follow: 'Follow',
   },
 };
 

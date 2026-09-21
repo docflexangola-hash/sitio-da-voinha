@@ -2,6 +2,14 @@
 
 Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada datada no topo (ou no fim, de forma consistente) a cada sessão**; registar decisões, mudanças de estado e pendências.
 
+## 2026-09-21 — Secção Instagram na landing (embed oficial do perfil)
+
+- **Decisão (brainstorming com o dono)**: em vez de fotos locais/IA, usar o **embed oficial** `https://www.instagram.com/o_sitio_da_voinhaa/embed/` — zero manutenção, fotos sempre atuais; perde-se a ordem aleatória (é a do IG) e o iframe fica branco (não estilizável).
+- **Bloqueio validado**: o link partilhado trazia `stkn=` (token de conta privada); o dono confirmou que o perfil **já é público** — o embed só mostra fotos em contas públicas.
+- **Implementação** (`index.html`): nova `<section id="instagram">` entre o `#menu` e o rodapé — eyebrow dourado + título `O nosso Instagram` + card `max-w-md rounded-xl` com iframe `h-[600px]` `loading="lazy"` `referrerpolicy="no-referrer-when-downgrade"`, legenda `body-sm` e CTA "Seguir" (borda dourada, abre perfil em nova aba, ícone `external`). Sem accent de script (a Vó já fala uma vez por ecrã).
+- **i18n**: +4 chaves pt/en (`insta_eyebrow`, `insta_title`, `insta_caption`, `insta_follow`).
+- **Nota de verificação**: o embutido só confirma ao vivo no browser real/logado — o IG bloqueia bots e em dev pode mostrar a parede de login (normal). AGENTS.md atualizado (estrutura + Estado atual).
+
 ## 2026-09-21 — Pipeline impeccable: document + critique + polish
 
 - **Document o sistema**: gerados `PRODUCT.md` (contexto), `DESIGN.md` (design system: tokens, tipografia, regras nomeadas) e `.impeccable/design.json` (source of truth estruturada) via `impeccable init/document`.
