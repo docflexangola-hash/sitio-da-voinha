@@ -8,3 +8,4 @@ dist
 dbsupabasepass.md
 supabase/*.local.js
 Thumbs.db
+qrcode/

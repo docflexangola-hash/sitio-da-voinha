@@ -2,6 +2,12 @@
 
 Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada datada no topo (ou no fim, de forma consistente) a cada sessão**; registar decisões, mudanças de estado e pendências.
 
+## 2026-09-21 — QR code do site
+
+- Gerado (offline, Node + `qrcode` + `sharp`): **preto sobre branco, logo dos talheres ao centro**, nível de correção **H**, **1024×1024** PNG + versão vector SVG (sem logo, impressão alta resolução).
+- URL codificada: `https://sitio-da-voinha.vercel.app/` (confirmada por scan com `jsqr`).
+- Pasta `qrcode/` na raiz (excluída do Git, não publicada no site) — para mesas/menus/cartões.
+
 ## 2026-09-20 — Favicon PNG/ICO (WhatsApp + Vercel)
 
 - O favicon atual (`public/favicon.svg`, recorte dos talheres) tem suporte limitado em plataformas como WhatsApp/iOS. Geradas versões PNG/ICO via `sharp`: `favicon-16.png`, `favicon-32.png`, `favicon-192.png`, `apple-touch-icon.png` (180×180), `favicon.ico`.
