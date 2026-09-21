@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: process.env.BASE_PATH || '/',
+  base: '/',
   plugins: [],
   build: {
     target: 'es2018',
