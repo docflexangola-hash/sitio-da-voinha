@@ -6,7 +6,7 @@ const dict = {
     cta_call_full: 'Ligar +244 925 963 030',
     hero_eyebrow: 'Bem-vindo ao',
     hero_mini:
-      'Sabor de casa à beira-mar na Praia Morena, em Benguela. Explore o nosso menu e os preços abaixo.',
+      'Sabor de casa à beira-mar na Praia Morena, em Benguela. Consulte o menu e os preços abaixo.',
     cta_menu: 'Ver Menu',
     sec_menu: 'Menu',
     menu_sub: 'A nossa ementa',
@@ -48,7 +48,7 @@ const dict = {
     cta_call_full: 'Call +244 925 963 030',
     hero_eyebrow: 'Welcome to',
     hero_mini:
-      'Home-style flavours by the sea at Praia Morena, Benguela. Browse our menu and prices below.',
+      'Home-style cooking by the sea at Praia Morena, Benguela. See the menu and prices below.',
     cta_menu: 'See the Menu',
     sec_menu: 'Menu',
     menu_sub: 'Our menu',
