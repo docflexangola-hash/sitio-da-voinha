@@ -2,6 +2,20 @@
 
 Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada datada no topo (ou no fim, de forma consistente) a cada sessão**; registar decisões, mudanças de estado e pendências.
 
+## 2026-09-22 — Fotos do slider migradas do imgbb para o Supabase Storage
+
+- **Contexto**: o slider tinha problemas de carregamento. As fotos viviam no **imgbb** (CDN grátis, lento/instável) via edge function `upload-imgbb` — um CDN externo contra a convenção do AGENTS.md, e sem qualquer otimização (subia-se o ficheiro original, às vezes 32MB/HEIC).
+- **Decisão (dono)**: mudar o destino para o **Supabase Storage** (bucket público `galeria`), **redimensionar no browser** antes do upload e **remover o imgbb por completo**.
+- **`supabase/schema.sql` (bloco 6 novo)**: cria o bucket `galeria` (`public`, limite 32MB) + políticas (leitura anon; escrita `authenticated`) + grants. Idempotente (`on conflict (id) do nothing`).
+- **Edge Functions novas** (Deno, mesmo padrão de auth da antiga — `OPTIONS` CORS + `getUser` + `rpc('eh_admin')`):
+  - `supabase/functions/upload-galeria/` — valida `image/*` e ≤32MB, gera caminho `{menu}/{uuid}.{ext}`, `storage.from('galeria').upload(..., {cacheControl:'3600'})`, devolve a URL pública (`{SUPABASE_URL}/storage/v1/object/public/galeria/...`).
+  - `supabase/functions/remover-galeria/` — lê a URL atual, remove o objeto do Storage e apaga a linha via RPC `remover_galeria` (idempotente; o RPC continua a validar `eh_admin`).
+  - Removida `upload-imgbb/`; secret `IMGBB_KEY` deve ser apagado (`supabase secrets unset IMGBB_KEY`).
+- **`src/supabase.js`**: `uploadImgbb(file)` → `uploadGaleria(file, menuId)` (POST `/functions/v1/upload-galeria`, FormData `image`+`menu`); `removeGaleriaItem(id)` passou a chamar `/functions/v1/remover-galeria` (apaga ficheiro + linha). `fetchGaleria`/`addGaleriaItem`/slider inalterados.
+- **`src/admin.js`**: helper `galeriaOptimize(file)` — redimensiona para máx. 1100px no canvas, encoda PNG/WebP/JPEG (q.8), preserva GIFs animados e o original se o canvas falhar; `onGaleriaFile` usa-o antes do upload; `saveErrorMsg` atualizado (`storage-falhou`, `categoria-invalida`; removidos os `imgbb-*`).
+- **Passos do dono (Supabase)**: correr o **bloco 6** do `schema.sql` no SQL Editor; `supabase functions deploy upload-galeria --project-ref qsohbmjdhwjgizdfowfk --no-verify-jwt`; idem `remover-galeria`; `supabase secrets unset IMGBB_KEY`. Depois **re-subir as 7 fotos** pelo `/admin.html` (as URLs antigas do imgbb ficam órfãs — apagá-las pela lista) e correr `npm run build`.
+- **Nota técnica**: `sharp` não corre em edge functions do Deno (binários nativos `.node`); por isso o redimensionamento foi feito no browser (canvas) — mesmo objetivo (imagens ~1100px para cartões de 330px) sem dependências novas.
+
 ## 2026-09-22 — Fix: slider `#galeria` invisível no browser do dono (cache headers)
 
 - **Sintoma**: o slider de fotos na landing não aparecia no browser do dono (Angola), mesmo em janela privada com hard refresh. O código JS (`renderGaleria`) e o backend (7 fotos na tabela `galeria`, REST 200) estavam corretos.

@@ -7,5 +7,6 @@ dist
 !.env.example
 dbsupabasepass.md
 supabase/*.local.js
+supabase/.temp/
 Thumbs.db
 qrcode/

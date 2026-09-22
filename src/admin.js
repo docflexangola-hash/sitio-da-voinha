@@ -21,7 +21,7 @@ import {
   fetchGaleria,
   addGaleriaItem,
   removeGaleriaItem,
-  uploadImgbb,
+  uploadGaleria,
 } from './supabase.js';
 
 const esc = (s) =>
@@ -329,8 +329,8 @@ function saveErrorMsg(res) {
   if (res.error === 'sem-imagem') return 'Nenhuma imagem recebida.';
   if (res.error === 'formato-invalido') return 'Formato de imagem não suportado.';
   if (res.error === 'imagem-grande') return 'Imagem acima de 32MB.';
-  if (res.error === 'imgbb-nao-configurado') return 'Edge Function sem IMGBB_KEY — configura a env.';
-  if (res.error === 'imgbb-falhou') return 'Não foi possível carregar no imgbb. Tenta de novo.';
+  if (res.error === 'categoria-invalida') return 'Categoria inválida.';
+  if (res.error === 'storage-falhou') return 'Não foi possível guardar a imagem no armazenamento. Tenta de novo.';
   if (res.error === 'erro-interno') return 'Erro interno do servidor.';
   if (res.error === 'timeout') return 'O carregamento demorou demasiado — tenta de novo.';
   return `Não guardou: ${res.error || 'erro desconhecido'}`;
@@ -496,7 +496,8 @@ async function onGaleriaFile(file) {
   state.galeriaUploading = true;
   renderGaleriaAdmin();
   try {
-    const up = await uploadImgbb(file);
+    const optimized = await galeriaOptimize(file);
+    const up = await uploadGaleria(optimized, state.galeriaCat);
     if (!up.ok) {
       toast(saveErrorMsg(up), 'err');
       if (up.error === 'not-authenticated' || up.error === 'acesso-nao-admin') {
@@ -535,6 +536,37 @@ async function onGaleriaDelete(id) {
   }
   toast(saveErrorMsg(res), 'err');
   if (res.error === 'not-authenticated' || res.error === 'acesso-nao-admin') await logoutToLogin();
+}
+
+const GALERIA_MAX_EDGE = 1100;
+
+function galeriaOptimize(file) {
+  return new Promise((resolve) => {
+    const type = file.type.toLowerCase();
+    if (type === 'image/gif') return resolve(file);
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    const finish = (out) => {
+      URL.revokeObjectURL(url);
+      resolve(out);
+    };
+    img.onerror = () => finish(file);
+    img.onload = () => {
+      const edge = Math.max(img.naturalWidth, img.naturalHeight);
+      if (!edge || edge <= GALERIA_MAX_EDGE) return finish(file);
+      const scale = GALERIA_MAX_EDGE / edge;
+      const w = Math.max(1, Math.round(img.naturalWidth * scale));
+      const h = Math.max(1, Math.round(img.naturalHeight * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d')?.drawImage(img, 0, 0, w, h);
+      const outType =
+        type === 'image/png' ? 'image/png' : type === 'image/webp' ? 'image/webp' : 'image/jpeg';
+      canvas.toBlob((blob) => finish(blob && blob.size > 0 ? blob : file), outType, 0.8);
+    };
+    img.src = url;
+  });
 }
 
 function initGaleriaControls() {

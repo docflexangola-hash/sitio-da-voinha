@@ -221,25 +221,40 @@ export async function addGaleriaItem(url, alt, menuId) {
   return rpcWrite('adicionar_galeria', { p_url: url, p_alt: alt || '', p_menu: menuId }, false);
 }
 
-// Remove uma foto da galeria (RPC que confirma o dono no servidor)
+// Remove uma foto do slider (Edge Function: apaga o ficheiro do Storage e a linha)
 export async function removeGaleriaItem(id) {
-  if (!isConfigured()) return { ok: false, error: 'not-configured' };
-  return rpcWrite('remover_galeria', { p_id: Number(id) }, false);
+  if (!isConfigured()) return { ok: false, error: 'nao-configurado' };
+  const session = await getSession();
+  if (!session) return { ok: false, error: 'not-authenticated' };
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/remover-galeria`, {
+      method: 'POST',
+      headers: authHeaders(session.access_token),
+      body: JSON.stringify({ id: Number(id) }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) return { ok: false, error: body.error || `http-${res.status}` };
+    return { ok: true, data: true };
+  } catch (err) {
+    if (err?.name === 'AbortError') return { ok: false, error: 'timeout' };
+    return { ok: false, error: String(err) };
+  }
 }
 
-// Carrega a imagem para o imgbb via Edge Function (a chave vive no servidor)
-export async function uploadImgbb(file) {
+// Carrega a imagem para o Storage do Supabase (Edge Function valida o dono no servidor)
+export async function uploadGaleria(file, menuId) {
   if (!isConfigured()) return { ok: false, error: 'nao-configurado' };
   const session = await getSession();
   if (!session) return { ok: false, error: 'not-authenticated' };
   try {
     const fd = new FormData();
     fd.append('image', file);
+    fd.append('menu', menuId);
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 30_000);
     let res;
     try {
-      res = await fetch(`${SUPABASE_URL}/functions/v1/upload-imgbb`, {
+      res = await fetch(`${SUPABASE_URL}/functions/v1/upload-galeria`, {
         method: 'POST',
         headers: {
           apikey: SUPABASE_ANON_KEY,
@@ -253,8 +268,8 @@ export async function uploadImgbb(file) {
     }
     const body = await res.json().catch(() => ({}));
     if (!res.ok) return { ok: false, error: body.error || `http-${res.status}` };
-    if (!body?.url) return { ok: false, error: 'imgbb-falhou' };
-    return { ok: true, url: body.url, delete_url: body.delete_url || '' };
+    if (!body?.url) return { ok: false, error: 'storage-falhou' };
+    return { ok: true, url: body.url };
   } catch (err) {
     if (err?.name === 'AbortError') return { ok: false, error: 'timeout' };
     return { ok: false, error: String(err) };

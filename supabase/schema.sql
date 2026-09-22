@@ -51,7 +51,7 @@ comment on table public.seccoes is
 create table if not exists public.galeria (
   id         bigint generated always as identity primary key,
   menu_id    text not null check (menu_id in ('refeicoes', 'bebidas')),
-  url        text not null,               -- url final (ex.: display_url do imgbb)
+  url        text not null,               -- url pública no Storage (bucket galeria)
   alt        text not null default '',    -- etiqueta do prato (opcional)
   created_at timestamptz not null default now()
 );
@@ -246,3 +246,33 @@ grant execute on function public.atualizar_ordem(text[]) to anon, authenticated;
 grant execute on function public.ping_admin() to anon, authenticated;
 grant execute on function public.adicionar_galeria(text, text, text) to anon, authenticated;
 grant execute on function public.remover_galeria(bigint) to anon, authenticated;
+
+-- ------------------------------------------------------------
+-- 6. Storage (ficheiros das fotos do slider)
+-- ------------------------------------------------------------
+-- As fotos já não vão para o imgbb: são guardadas no bucket público
+-- "galeria" do Storage. A tabela `galeria` (secção 1c) continua a guardar
+-- os metadados; aqui só vive a URL pública do ficheiro.
+-- O upload/remoção passam pelas Edge Functions `upload-galeria` e
+-- `remover-galeria` (validam eh_admin no servidor), nunca pelo cliente.
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('galeria', 'galeria', true, 33554432, null)
+on conflict (id) do nothing;
+
+-- Leitura pública: qualquer pessoa vê as fotos do slider
+drop policy if exists "galeria_public_read" on storage.objects;
+create policy "galeria_public_read"
+  on storage.objects for select
+  using (bucket_id = 'galeria');
+
+-- Escrita/remoção: só contas autenticadas (a do dono) — a Edge Function
+-- volta a confirmar eh_admin() antes de qualquer operação
+drop policy if exists "galeria_auth_write" on storage.objects;
+create policy "galeria_auth_write"
+  on storage.objects for all
+  using (bucket_id = 'galeria')
+  with check (bucket_id = 'galeria');
+
+grant select on storage.objects to anon, authenticated;
+grant insert, update, delete on storage.objects to authenticated;

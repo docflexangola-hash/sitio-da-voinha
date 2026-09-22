@@ -1,10 +1,9 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 
-const IMGBB_KEY = Deno.env.get('IMGBB_KEY') ?? '';
 const URL = Deno.env.get('SUPABASE_URL') ?? '';
 const ANON = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
-const MAX_BYTES = 32 * 1024 * 1024;
-const IMGBB_TIMEOUT_MS = 20_000;
+
+const PUBLIC_PREFIX = `${URL}/storage/v1/object/public/galeria/`;
 
 const json = (status, body) => {
   const headers = { 'Content-Type': 'application/json' };
@@ -30,7 +29,6 @@ Deno.serve(async (req) => {
   try {
     const token = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
     if (!token) return json(401, { error: 'not-authenticated' });
-    if (!IMGBB_KEY) return json(503, { error: 'imgbb-nao-configurado' });
 
     const supabase = createClient(URL, ANON, {
       global: { headers: { Authorization: `Bearer ${token}` } },
@@ -41,32 +39,28 @@ Deno.serve(async (req) => {
     const { data: isAdmin } = await supabase.rpc('eh_admin');
     if (!isAdmin) return json(403, { error: 'acesso-nao-admin' });
 
-    const form = await req.formData();
-    const file = form.get('image');
-    if (!(file instanceof File)) return json(400, { error: 'sem-imagem' });
-    if (!file.type || !file.type.startsWith('image/')) return json(400, { error: 'formato-invalido' });
-    if (file.size > MAX_BYTES) return json(400, { error: 'imagem-grande' });
+    const body = await req.json().catch(() => ({}));
+    const id = Number(body?.id);
+    if (!Number.isFinite(id) || id <= 0) return json(400, { error: 'id-invalido' });
 
-    const imgbb = new FormData();
-    imgbb.set('key', IMGBB_KEY);
-    imgbb.set('image', file);
-    let data;
-    try {
-      const r = await fetch('https://api.imgbb.com/1/upload', {
-        method: 'POST',
-        body: imgbb,
-        signal: AbortSignal.timeout(IMGBB_TIMEOUT_MS),
-      });
-      data = await r.json().catch(() => null);
-    } catch (err) {
-      if (err instanceof DOMException && err.name === 'TimeoutError') {
-        return json(504, { error: 'imgbb-timeout' });
-      }
-      return json(502, { error: 'imgbb-falhou' });
+    const { data: row } = await supabase
+      .from('galeria')
+      .select('url')
+      .eq('id', id)
+      .maybeSingle();
+
+    let path = '';
+    if (row?.url && row.url.startsWith(PUBLIC_PREFIX)) path = row.url.slice(PUBLIC_PREFIX.length);
+
+    if (path) {
+      const { error: rmError } = await supabase.storage.from('galeria').remove([path]);
+      if (rmError) return json(502, { error: 'storage-falhou' });
     }
-    if (!data?.data?.display_url) return json(502, { error: 'imgbb-falhou' });
 
-    return json(200, { url: data.data.display_url, delete_url: data.data.delete_url ?? '' });
+    const { data: rpcOk } = await supabase.rpc('remover_galeria', { p_id: id });
+    if (rpcOk !== true) return json(403, { error: 'acesso-nao-admin' });
+
+    return json(200, {});
   } catch {
     return json(500, { error: 'erro-interno' });
   }
