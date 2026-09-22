@@ -4,10 +4,12 @@ Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada da
 
 ## 2026-09-22 — Fix: ReferenceError em `renderList` que bloqueava a exibição da Galeria
 
-- **Sintoma**: a secção `#galeria` continuava com `hidden` na landing page mesmo com dados existentes na base de dados.
+- **Sintoma**: a secção `#galeria` continuava com `hidden` na landing page mesmo com fotos na base de dados (3 rows `refeicoes`, REST `200` com os headers exatos do browser). Nem o título "Galeria" aparecia.
 - **Causa raiz**: na função `renderList()` de `src/main.js`, a linha `listEl().setAttribute('aria-labelledby', \`tab-${active.catId}\`)` tentava aceder à variável `active` em vez de `cat` (a variável declarada no escopo era `const cat = activeCat()`). Isso disparava um `Uncaught ReferenceError: active is not defined` durante `loadData()` / `renderMenu()`, interrompendo a execução antes da chamada a `renderGaleria()`.
+- **Cadeia exata**: `renderMenu()` chama `renderTabs(); renderList(); renderGaleria();` — a exceção estourava em `renderList` e `renderGaleria()` nunca chegava a correr. O menu continuava visível porque o `innerHTML` da lista já fora escrito antes da linha a errar (por isso os chips/abas "respondiam" no teste do dono).
+- **Porque não foi apanhado antes**: diagnóstico contagioso — o JS corria, a rede chegava ao supabase.co, o REST devolvia 200, o bundle tinha o código certo (`galeriaDeck` presente), e `npm run build` não deteta ReferenceErrors (esbuild não faz typecheck). A falha era puramente de runtime, no fluxo de render, e silenciosa (a secção fica `hidden` sem prémio de erro).
 - **Solução**: corrigido em `src/main.js` para `tab-${cat.catId}`.
-- **Validação**: `npm run build` executado com sucesso sem erros.
+- **Validação**: `npm run build` ✓; fix verificado no bundle deployado (`main-BumVDpn8.js` usa `${t.catId}`); push `5e3e430` → Vercel → **confirmado em produção pelo dono** (galeria visível com as 3 fotos).
 
 ## 2026-09-22 — Fotos do slider migradas do imgbb para o Supabase Storage
 
