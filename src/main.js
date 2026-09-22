@@ -269,6 +269,10 @@ function renderGaleria() {
   const sec = galeriaSec();
   if (!sec) return;
   stopGaleriaAutoplay();
+  const eyebrow = document.querySelector('[data-i18n="galeria_eyebrow"]');
+  if (eyebrow) eyebrow.textContent = t(state.menu === 'bebidas' ? 'galeria_eyebrow_bebidas' : 'galeria_eyebrow');
+  const title = document.querySelector('[data-i18n="galeria_title"]');
+  if (title) title.hidden = state.menu === 'bebidas';
   const deck = shuffle(state.galeria.filter((f) => f.menu_id === state.menu));
   state.galeriaDeck = deck;
   if (!deck.length) {
