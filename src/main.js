@@ -159,7 +159,7 @@ function renderList(scrollTop = false) {
       ${esc(t('menu_footer_note'))}
     </p>`;
 
-  listEl().setAttribute('aria-labelledby', `tab-${active.catId}`);
+  listEl().setAttribute('aria-labelledby', `tab-${cat.catId}`);
   const statusEl = document.querySelector('#lista-status');
   if (statusEl) statusEl.textContent = `${lname(cat)} — ${cat.itens.length} ${t('count_opcoes')}`;
 

@@ -2,6 +2,13 @@
 
 Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada datada no topo (ou no fim, de forma consistente) a cada sessão**; registar decisões, mudanças de estado e pendências.
 
+## 2026-09-22 — Fix: ReferenceError em `renderList` que bloqueava a exibição da Galeria
+
+- **Sintoma**: a secção `#galeria` continuava com `hidden` na landing page mesmo com dados existentes na base de dados.
+- **Causa raiz**: na função `renderList()` de `src/main.js`, a linha `listEl().setAttribute('aria-labelledby', \`tab-${active.catId}\`)` tentava aceder à variável `active` em vez de `cat` (a variável declarada no escopo era `const cat = activeCat()`). Isso disparava um `Uncaught ReferenceError: active is not defined` durante `loadData()` / `renderMenu()`, interrompendo a execução antes da chamada a `renderGaleria()`.
+- **Solução**: corrigido em `src/main.js` para `tab-${cat.catId}`.
+- **Validação**: `npm run build` executado com sucesso sem erros.
+
 ## 2026-09-22 — Fotos do slider migradas do imgbb para o Supabase Storage
 
 - **Contexto**: o slider tinha problemas de carregamento. As fotos viviam no **imgbb** (CDN grátis, lento/instável) via edge function `upload-imgbb` — um CDN externo contra a convenção do AGENTS.md, e sem qualquer otimização (subia-se o ficheiro original, às vezes 32MB/HEIC).
