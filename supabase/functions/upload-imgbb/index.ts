@@ -6,13 +6,27 @@ const ANON = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
 const MAX_BYTES = 32 * 1024 * 1024;
 const IMGBB_TIMEOUT_MS = 20_000;
 
-const json = (status, body) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  });
+const json = (status, body) => {
+  const headers = { 'Content-Type': 'application/json' };
+  if (status !== 204) {
+    headers['Access-Control-Allow-Origin'] = '*';
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, PATCH, DELETE, OPTIONS';
+    headers['Access-Control-Allow-Headers'] = 'authorization, x-client-info, apikey, content-type';
+  }
+  return new Response(JSON.stringify(body), { status, headers });
+};
 
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+      },
+    });
+  }
   try {
     const token = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
     if (!token) return json(401, { error: 'not-authenticated' });

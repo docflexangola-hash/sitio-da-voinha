@@ -2,6 +2,16 @@
 
 Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada datada no topo (ou no fim, de forma consistente) a cada sessão**; registar decisões, mudanças de estado e pendências.
 
+## 2026-09-22 — Fix: slider `#galeria` invisível no browser do dono (cache headers)
+
+- **Sintoma**: o slider de fotos na landing não aparecia no browser do dono (Angola), mesmo em janela privada com hard refresh. O código JS (`renderGaleria`) e o backend (7 fotos na tabela `galeria`, REST 200) estavam corretos.
+- **Diagnóstico**: o Vercel respondia com `X-Vercel-Cache: HIT` e `Age` elevado no HTML; o `Cache-Control: public, max-age=0, must-revalidate` padrão do Vercel não impede que proxies ISP/CDN em Angola sirvam uma cópia stale do HTML (versão anterior sem a secção `#galeria` ou com bundles antigos).
+- **Solução**: criado [`vercel.json`](file:///c:/Users/juary/Downloads/stitch_s_tio_da_voinha_digital_menu/sitio-da-voinha/vercel.json) na raiz do projeto com headers explícitos:
+  - `/` e `/(.*).html` → `Cache-Control: no-cache, no-store, must-revalidate`, `Pragma: no-cache`, `Expires: 0`
+  - `/assets/*` → `Cache-Control: public, max-age=31536000, immutable` (os bundles hasheados pelo Vite são seguros para cache longo)
+- **Validação**: `npm run build` → ✓ (12 modules, 45s, nomes de assets inalterados: `main-CgPcddTO.js`, `supabase-YIzwB-Ou.css`).
+- **Próximo passo**: `git add vercel.json && git commit && git push` para o Vercel aplicar os novos headers. Após deploy, pedir ao dono para abrir a landing em janela privada e confirmar que o slider aparece.
+
 ## 2026-09-21 — Secção Instagram na landing (embed oficial do perfil)
 
 - **Decisão (brainstorming com o dono)**: em vez de fotos locais/IA, usar o **embed oficial** `https://www.instagram.com/o_sitio_da_voinhaa/embed/` — zero manutenção, fotos sempre atuais; perde-se a ordem aleatória (é a do IG) e o iframe fica branco (não estilizável).
@@ -189,3 +199,15 @@ Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada da
 - **Verificado**: 
 pm run build verde (12 modulos); validador i18n pt 38//en 38, usadas 34, sem faltas/divergencias; detetor UI sem regressoes novas.
 - **Passos teus (Supabase)**: correr bloco galeria do schema.sql; supabase functions deploy upload-imgbb; supabase secrets set --env-name IMGBB_KEY <chave imgbb>; depois testar upload no /admin.html (login).- **Nota de verificacao do imgbb**: o teste de fumo a partir da maquina de desenvolvimento falha com imgbb code 103 ("forbidden to use this website" — mesmo com uma URL publica conhecida); trata-se de bloqueio por IP desta rede, nao do codigo (multipart/urlencoded/base64 e a chave passam; a chave nao devolve "invalid API key"). O upload real fara-se dos IPs da Supabase, via edge function deployada. Se ai voltar 103/415, rotacionar/confirmar a chave no dashboard do imgbb.- **Fix upload preso em "A carregar"**: a edge function pendurava sem timeout no pedido ao imgbb (e o fetch do browser idem). Adicionado AbortSignal.timeout(20s) ao imgbb na edge function (devolve imgbb-timeout), AbortController de 30s no uploadImgbb (cliente, devolve 	imeout), reset garantido do estado de upload em inally e novo erro mapeado no admin. **Re-colar o codigo novo da edge function no Dashboard (Deploy updates)** antes de retestar.
+
+## 2026-09-22 - Upload de fotos corrigido (edge function via CLI)
+
+- **Diagnostico do "Failed to fetch" no botao "Carregar foto"**: a funcao `upload-imgbb` estava deployada (via Dashboard editor, por isso o codigo diferia do local) com **JWT verification ativa na plataforma**. O gateway devolvia `401 {"error":"not-authenticated"}` **sem headers CORS** a todos os pedidos — incluindo o preflight OPTIONS que o browser manda antes de cada fetch. Sem `Access-Control-Allow-Origin` no preflight, o browser cancela o pedido (`TypeError: Failed to fetch`). Confirmado por curl: `OPTIONS` e `POST` → 401 sem `access-control-*`.
+- **Correcao (sem mudancas de codigo — frontend e funcao local ja estavam corretos)**:
+  1. `supabase login` (CLI 2.117.0; guarda token no keychain do SO, nao em `~/.supabase/access-token`).
+  2. `supabase functions deploy upload-imgbb --project-ref qsohbmjdhwjgizdfowfk --no-verify-jwt` — a flag desliga o JWT da plataforma; a funcao continua a autenticar no servidor (`getUser` + `eh_admin()`). Deploy direto (Docker nao precisa de estar a correr para funcoes).
+  3. `supabase secrets set IMGBB_KEY=<chave> --project-ref qsohbmjdhwjgizdfowfk` (no CLI 2.117.0 o `--env-name` **nao existe**; usa `NOME=VALOR`).
+  4. `supabase secrets list` confirma `IMGBB_KEY` presente.
+- **Verificacao tecnica** (curl): `OPTIONS` → `204` + `Access-Control-Allow-Origin: *` + `access-control-allow-headers/methods`; `POST` sem token → `401 {"error":"not-authenticated"}` **com** headers CORS (agora o browser mostra o erro real, nao "Failed to fetch").
+- **Projetos do CLI**: `svoinha` (ref `qsohbmjdhwjgizdfowfk`, West EU) e o "docflexangola-hash's Project" (`wqnajtzsgqzrtawbrkbu`) — cuidado para nunca apontar para o ref errado. O CLI nao esta "linked" a nenhuma pasta (sem `config.toml`); usar sempre `--project-ref`.
+- **Pendente**: teste ponta-a-ponta do upload (login do dono no `/admin.html` → carregar foto → foto no slider da landing). Nota antiga sobre imgbb code 103 por IP desta rede continua relevante: se o upload devolver `imgbb-falhou`, confirmar/rotacionar a chave no dashboard do imgbb.
