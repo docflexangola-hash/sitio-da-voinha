@@ -2,6 +2,16 @@
 
 Registo de desenvolvimento do projeto. Convenção: **acrescentar uma entrada datada no topo (ou no fim, de forma consistente) a cada sessão**; registar decisões, mudanças de estado e pendências.
 
+## 2026-09-22 — Tipografia: Archivo no lugar do Montserrat e Fraunces no lugar do Playfair (voz da Vó)
+
+- **Motivação**: o pairing Montserrat + Playfair (Google Fonts) é o par cliché nº1 dos geradores/`impeccable`; a execução era art-directed mas a *stockness* da fonte lia-se como template. Decisão do dono: trocar o sans para **Archivo** (grotesque grave, 400–800, latim com acentos PT) e a itálica da Vó para **Fraunces** (serif com eixo ótico, curva "impressa" mais autêntica).
+- **Mudanças**:
+  - `tailwind.config.js`: token `fontFamily.sans` → `['Archivo', ...]` e `fontFamily.script` → `['"Fraunces", Georgia, serif']`.
+  - `index.html` e `admin.html`: links Google Fonts atualizados para Archivo 400–800 + Fraunces itálica (o admin mantém o subconjunto sem `1,500`).
+  - `DESIGN.md`: bloco de tokens e prosa de tipografia atualizados (a estrutura continua caps + tracking largo; só o nome da família muda).
+- **O que NÃO mudou**: escala de tipos, preços `tnum` + leader + dourado, shapes, cores, tokens, wordmark/logo (SVGs são imagem), layout e lógica JS.
+- **Validação**: `npm run build` ✓. **Pendente**: revisão visual do dono — especialmente a itálica Fraunces da despedida ("Sinta-se em casa…", `index.html`) e do header do admin — é a mudança mais visível.
+
 ## 2026-09-22 — Fix: ReferenceError em `renderList` que bloqueava a exibição da Galeria
 
 - **Sintoma**: a secção `#galeria` continuava com `hidden` na landing page mesmo com fotos na base de dados (3 rows `refeicoes`, REST `200` com os headers exatos do browser). Nem o título "Galeria" aparecia.

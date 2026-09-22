@@ -30,58 +30,58 @@ colors:
   toast-surface: "rgb(47 49 48)"
 typography:
   script:
-    fontFamily: '"Playfair Display", Georgia, serif'
+    fontFamily: '"Fraunces", Georgia, serif'
     fontSize: "clamp(1.5rem, 3.5vw, 1.9rem)"
     fontWeight: 400
     fontStyle: italic
     lineHeight: 1.15
   headline:
-    fontFamily: "Montserrat, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(1.75rem, 4vw, 2.5rem)"
     fontWeight: 700
     lineHeight: 1.12
     letterSpacing: "0.05em"
     textTransform: "uppercase"
   headline-sm:
-    fontFamily: "Montserrat, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1.125rem"
     fontWeight: 600
     lineHeight: 1.35
     letterSpacing: "0.03em"
     textTransform: "uppercase"
   price:
-    fontFamily: "Montserrat, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1.25rem"
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "0.01em"
   body:
-    fontFamily: "Montserrat, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.6
     letterSpacing: "0.01em"
   body-lg:
-    fontFamily: "Montserrat, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.65
     letterSpacing: "0.01em"
   body-sm:
-    fontFamily: "Montserrat, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.75rem"
     fontWeight: 400
     lineHeight: 1.5
     letterSpacing: "0.02em"
   label:
-    fontFamily: "Montserrat, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.6875rem"
     fontWeight: 700
     lineHeight: 1.3
     letterSpacing: "0.14em"
     textTransform: "uppercase"
   label-sm:
-    fontFamily: "Montserrat, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.625rem"
     fontWeight: 700
     lineHeight: 1.3
@@ -149,7 +149,7 @@ components:
 
 O Sítio da Voinha é uma esplanada costeira casual com playground, à beira-mar na Praia Morena, Benguela. O sistema visual pega no ouro areento do estuário — o mesmo tom que aparece no verniz da madeira e na palha dos guarda-sóis — e arruma-o com a precisão de uma **carta clássica de restaurante**: listas abertas, linhas pontilhadas a fechar o preço, maiúsculas largas de menu, um toque de caligrafia quando a "Vó" fala. É costeiro porque respira areia e creme; é clássico porque nenhum botão é redondo e cada preço tem o seu lugar à direita.
 
-O sistema fala com tom descontraído e hierarquia firme. A densidade é baixa: muito ar, listas que se leem em linha reta, um dourado que aparece só onde esse dourado ganha significado — nos preços, nos CTAs e no item ativo. A personalidade vem do contraste entre o *sans* grave e compressado (Montserrat, caps com tracking largo) e o *script* solto da Playfair em itálico, reservado para as saudações da Vó.
+O sistema fala com tom descontraído e hierarquia firme. A densidade é baixa: muito ar, listas que se leem em linha reta, um dourado que aparece só onde esse dourado ganha significado — nos preços, nos CTAs e no item ativo. A personalidade vem do contraste entre o *sans* grave e compressado (Archivo, caps com tracking largo) e o *script* solto da Fraunces em itálico, reservado para as saudações da Vó.
 
 Todo o sistema vive em **tokens RGB invertíveis**: o mesmo token muda de sentido entre claro e escuro (dourado-escuro vira dourado-claro, creme vira quase-preto quente). Quem edita nunca escreve literais — usa o token. Duas regras de marca ficam fora da malha: o **logótipo** é imagem SVG que escurece a branco no modo escuro, e o **wordmark** do hero é letra-imagem, sempre branca, com o seu véu próprio.
 
@@ -158,7 +158,7 @@ Todo o sistema vive em **tokens RGB invertíveis**: o mesmo token muda de sentid
 - Superfícies creme/areia com texto quente-escuro; escuro = quase-preto quente com dourado-claro.
 - Botões e chips **perfeitamente retangulares** (`rounded-none`); inputs e cartas afáveis (`rounded-xl`); pills só para badges e toggles.
 - Listas abertas à moda da carta clássica — nunca cartões fechados no menu público.
-- Montserrat caps com tracking largo para estrutura; Playfair italics para o registo da Vó.
+- Archivo caps com tracking largo para estrutura; Fraunces italics para o registo da Vó.
 - Elevação flat com brilho quente: sombras cor de ouro no lugar certo (cartas, botões primários), nada ostensivo.
 - Temas clar/escuro por inversão de tokens; dark automático por janela horária (17:30–05:00) com escolha manual.
 
@@ -196,26 +196,26 @@ Paleta em tons de **areia e ouro de estuário**: quente, seca e diurna, com um c
 
 ## Typography
 
-**Display Font (sans):** Montserrat (com `ui-sans-serif`, `system-ui`)
-**Script Font:** Playfair Display (com Georgia, serif) — apenas em itálico, para a voz da Vó
+**Display Font (sans):** Archivo (com `ui-sans-serif`, `system-ui`)
+**Script Font:** Fraunces (com Georgia, serif) — apenas em itálico, para a voz da Vó
 **Label/Mono Font:** sem mono próprio; preços usam `font-variant-numeric: tabular-nums`
 
-**Character:** Montserrat grave, condensada no espaçamento de letras das caps — soa a ementa impressa, não a app moderna. A Playfair em itálico entra como a voz contada da avó: suave, humana, reservada para uma saudação de cada vez.
+**Character:** Archivo grave, condensada no espaçamento de letras das caps — soa a ementa impressa, não a app moderna. A Fraunces em itálico entra como a voz contada da avó: suave, humana, com a curva imperfeita de uma carta impressa, reservada para uma saudação de cada vez.
 
 ### Hierarchy
-- **Script** (Playfair 400 itálico, `clamp(1.5rem, 3.5vw, 1.9rem)`, 1.15): saudações da Vó — "A nossa ementa", "Os preços da Vó", a despedida depois da lista. Máximo um por ecrã.
-- **Headline** (Montserrat 700, `clamp(1.75rem, 4vw, 2.5rem)`, caps, 0.05em): título de secção ("Menu", "Editar Menu").
-- **Headline-sm** (Montserrat 600, 1.125rem, caps): títulos de grupo/categoria e de cards do admin.
-- **Price** (Montserrat 700, 1.25rem, `tnum`): o valor em Kz — sempre no fim da linha, à direita, com pontos de milhar.
-- **Body** (Montserrat 400, 0.875rem, 1.6): texto corrente.
-- **Body-sm** (Montserrat 400, 0.75rem): notas, metadados, chaves técnicas, crédito.
-- **Label** (Montserrat 700, 0.6875rem, caps, 0.14em): botões, abas, navegação, eyebrow.
-- **Label-sm** (Montserrat 700, 0.625rem, caps, 0.12em): pílulas de contagem, badges, micro-rótulos.
+- **Script** (Fraunces 400 itálico, `clamp(1.5rem, 3.5vw, 1.9rem)`, 1.15): saudações da Vó — "A nossa ementa", "Os preços da Vó", a despedida depois da lista. Máximo um por ecrã.
+- **Headline** (Archivo 700, `clamp(1.75rem, 4vw, 2.5rem)`, caps, 0.05em): título de secção ("Menu", "Editar Menu").
+- **Headline-sm** (Archivo 600, 1.125rem, caps): títulos de grupo/categoria e de cards do admin.
+- **Price** (Archivo 700, 1.25rem, `tnum`): o valor em Kz — sempre no fim da linha, à direita, com pontos de milhar.
+- **Body** (Archivo 400, 0.875rem, 1.6): texto corrente.
+- **Body-sm** (Archivo 400, 0.75rem): notas, metadados, chaves técnicas, crédito.
+- **Label** (Archivo 700, 0.6875rem, caps, 0.14em): botões, abas, navegação, eyebrow.
+- **Label-sm** (Archivo 700, 0.625rem, caps, 0.12em): pílulas de contagem, badges, micro-rótulos.
 
 ### Named Rules
 **The Price Gold Rule.** Todo o preço usa `price` + `tnum` + cor `gold`, alinhado à direita, com `whitespace-nowrap`. Esgotado → `line-through` + cor esmaecida, nunca outra cor.
 
-**The Script Scarcity Rule.** A Playfair só fala uma vez; mais de uma saudação da Vó por página é excesso.
+**The Script Scarcity Rule.** A Fraunces só fala uma vez; mais de uma saudação da Vó por página é excesso.
 
 ## Layout
 
@@ -308,4 +308,4 @@ O prato é a assinatura do sistema: numa única linha (desktop e mobile), **nome
 - **Don't** usar o path antigo `escrita-voinha-e-talheres` no wordmark; o hero usa `texto-sitio-da` + `texto-voinha`, sempre brancos com `logo-sdv-hero`.
 - **Don't** envolver a lista pública de pratos em cartões fechados — carta aberta com `divide-y`.
 - **Don't** usar verde para sucesso; o admin usa `ink-toast`/`on-toast` para sucesso, `honey` para avisos, `error-surface` para erros.
-- **Don't** usar Playfair fora do registo de saudação da Vó; estrutura é sempre Montserrat caps.
+- **Don't** usar Fraunces fora do registo de saudação da Vó; estrutura é sempre Archivo caps.

@@ -49,8 +49,8 @@ export default {
         timber: 'rgb(var(--c-timber) / <alpha-value>)',
       },
       fontFamily: {
-        sans: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        script: ['"Playfair Display"', 'Georgia', 'serif'],
+        sans: ['Archivo', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        script: ['"Fraunces"', 'Georgia', 'serif'],
       },
       fontSize: {
         'display-lg': ['clamp(2.25rem, 5.5vw, 3.5rem)', { lineHeight: '1.05', fontWeight: '800', letterSpacing: '0.08em' }],
