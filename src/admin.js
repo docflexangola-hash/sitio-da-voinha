@@ -34,6 +34,7 @@ let state = {
   overrides: [],
   ordemMap: new Map(),
   tab: 'refeicoes',
+  section: 'precos',
   busca: '',
   ordemAberto: false,
   galeria: [],
@@ -611,8 +612,27 @@ function renderTabs() {
   if (panel) panel.setAttribute('aria-labelledby', state.tab === 'bebidas' ? 'atab-bebidas' : 'atab-refeicoes');
 }
 
+function renderSectionTabs() {
+  const tabs = document.querySelectorAll('[data-stab]');
+  tabs.forEach((btn) => {
+    const active = btn.getAttribute('data-stab') === state.section;
+    btn.className = `rounded-none py-2.5 font-sans text-label-caps uppercase transition-all ${
+      active ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:text-on-surface'
+    }`;
+    btn.setAttribute('aria-selected', String(active));
+    btn.setAttribute('tabindex', active ? '0' : '-1');
+  });
+}
+
+function toggleSections() {
+  $('#sec-precos').hidden = state.section !== 'precos';
+  $('#sec-fotos').hidden = state.section !== 'galeria';
+  if (state.section === 'galeria') renderGaleriaAdmin();
+  renderSectionTabs();
+}
+
 function initControls() {
-  const tablist = document.querySelector('[role="tablist"]');
+  const tablist = document.getElementById('atab-tablist');
   const tabs = [...(tablist?.querySelectorAll('[data-atab]') || [])];
 
   tabs.forEach((btn) =>
@@ -642,6 +662,31 @@ function initControls() {
     renderTabs();
     render();
     tabs[n].focus();
+  });
+
+  const stabTablist = document.getElementById('stab-tablist');
+  const stabTabs = [...(stabTablist?.querySelectorAll('[data-stab]') || [])];
+
+  stabTabs.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      state.section = btn.getAttribute('data-stab');
+      toggleSections();
+    })
+  );
+
+  stabTablist?.addEventListener('keydown', (e) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+    const idx = stabTabs.findIndex((b) => b.getAttribute('data-stab') === state.section);
+    if (idx === -1) return;
+    let n = idx;
+    if (e.key === 'ArrowRight') n = (idx + 1) % stabTabs.length;
+    else if (e.key === 'ArrowLeft') n = (idx - 1 + stabTabs.length) % stabTabs.length;
+    else if (e.key === 'Home') n = 0;
+    else if (e.key === 'End') n = stabTabs.length - 1;
+    e.preventDefault();
+    state.section = stabTabs[n].getAttribute('data-stab');
+    toggleSections();
+    stabTabs[n].focus();
   });
 
   $('#admin-busca').addEventListener('input', (e) => {
@@ -686,6 +731,7 @@ async function boot() {
   initControls();
   setBackendBanner();
   renderTabs();
+  toggleSections();
   if (await getSession()) await enterAdmin();
 }
 
